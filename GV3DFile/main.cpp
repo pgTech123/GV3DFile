@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 
 
     GVQLabel *l = new GVQLabel();
+    //TODO: change logo path
     QIcon *icon = new QIcon("C:\\Users\\Pascal\\Documents\\GV\\Logos\\GVisionLogo.ico");
 
     l->setGeometry(100,100,720,405);

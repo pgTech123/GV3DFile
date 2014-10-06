@@ -5,26 +5,31 @@ GVIndexCube::GVIndexCube()
     m_p_iImageWidth = 0;
     m_p_iImageHeight = 0;
     m_p_ucImageData = NULL;
+    m_p_bPixelFilled = NULL;
 }
 
-GVIndexCube::GVIndexCube(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData, GVIndexCube** p_GVImageArray)
+GVIndexCube::GVIndexCube(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData,
+                         bool* p_bPixelFilled, GVIndexCube** p_GVImageArray)
 {
     //Preset if error in setImageProperty
     m_p_iImageWidth = NULL;
     m_p_iImageHeight = NULL;
     m_p_ucImageData = NULL;
+    m_p_bPixelFilled = NULL;
 
-    setImageProperty(p_iImageWidth, p_iImageHeight, p_ucImageData);
+    setImageProperty(p_iImageWidth, p_iImageHeight, p_ucImageData, p_bPixelFilled);
     setGVIndexStorageReference(p_GVImageArray);
 }
 
-bool GVIndexCube::setImageProperty(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData)
+bool GVIndexCube::setImageProperty(int* p_iImageWidth, int* p_iImageHeight,
+                                   unsigned char* p_ucImageData,  bool* p_bPixelFilled)
 {
-    if(*p_iImageWidth != 0 && *p_iImageHeight != 0 && p_ucImageData != NULL)
+    if(*p_iImageWidth != 0 && *p_iImageHeight != 0 && p_ucImageData != NULL && p_bPixelFilled != NULL)
     {
         m_p_iImageWidth = p_iImageWidth;
         m_p_iImageHeight = p_iImageHeight;
         m_p_ucImageData = p_ucImageData;
+        m_p_bPixelFilled = p_bPixelFilled;
 
         return true;
     }
@@ -91,6 +96,7 @@ void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relati
                                             double dCenterPointX,
                                             double dCenterPointY)
 {
+    //TODO: PROTECTION IF ADDRESSES NULL
     if(m_iHierarchyLevel != 0)
     {
 
@@ -114,52 +120,11 @@ void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relati
             //IF A PIXEL IS PRESENT
             if((m_ucMap & (0x01 << i)))
             {
-                //ACCESS CORRESPONDING PIXEL AND VERIFY IF ALREADY WRITTEN
-
-            }
-        }
-
-
-
-
-
-
-
-
-
-        //DISTANCE BETWEEN CORNERS / 2
-        double dHalfDstBtw2CornersXX = (iArrPosXRotation[0] - iArrPosXRotation[3])/2;
-        double dHalfDstBtw2CornersXY = (iArrPosYRotation[0] - iArrPosYRotation[3])/2;
-        double dHalfDstBtw2CornersYX = (iArrPosXRotation[0] - iArrPosXRotation[1])/2;
-        double dHalfDstBtw2CornersYY = (iArrPosYRotation[0] - iArrPosYRotation[1])/2;
-        double dHalfDstBtw2CornersZX = (iArrPosXRotation[0] - iArrPosXRotation[4])/2;
-        double dHalfDstBtw2CornersZY = (iArrPosYRotation[0] - iArrPosYRotation[4])/2;
-
-        for(int dst = 0; dst < 8; dst ++)
-        {
-            if(isBitHigh(m_ucMap, ucSortedByDstFromScreen[dst]))
-            {
-                //SQUARE RANGE
-                double dTop;// = dDeltaCenterPointRoundedY + iArrPosXRotation[/*TODO*/]/*TODO...*/;
-                double dBottom;
-                double dLeft;
-                double dRight;
-                //TODO: base sur la position du pixel apres rotation...
-
-
-                //RENDER PIXELS
-                //TODO:
-                //centerpoint+top, centerpoint-bottom, ...l-r
-                //cast(value*16)en x et en y
-                int iImportanceInPixelX;
-                int iImportanceInPixelY;
-                int iPixelRenderedFactor = iImportanceInPixelX * iImportanceInPixelY;
-
-                //value caste X * value caste Y * value pixel = pixel rendu
-                //WRITE PIXEL
-                //TODO:
-
-                //TODO: add transparency
+                //ACCESS CORRESPONDING PIXEL AND VERIFY IF IT IS NOT WRITTEN YET
+                //if(!m_p_bPixelFilled[TODO])
+                {
+                    //WRITE PIXEL
+                }
             }
         }
     }

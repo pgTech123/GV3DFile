@@ -10,9 +10,6 @@
 
 #include <gvimage.h>
 
-#define WIDTH 32
-#define HEIGHT 32
-
 using namespace std;
 
 class GVQLabel : public QLabel

@@ -34,8 +34,6 @@ public:
     void generateImage();
 
 private:
-    unsigned char* m_ucArrTransparencyMap;
-
     int m_iSideLenght;
     int m_iNumberOfLevels;  //1 to n, where 1 => pixel level
     int* m_iArrCubeAtLevel;
@@ -58,42 +56,4 @@ private:
     unsigned char m_dCornerSortedByDst[8];
 };
 
-
-
-
-
-
-
-
-/*
-class GVImage
-{
-public:
-    GVImage();
-    GVImage(char*);
-
-    void openFile(char*);
-    void generateImage(unsigned char pixels[], int width, int height);
-
-    // TRANSFORM
-    //TO GVIMAGE void rotateInitialCube();   //Creates struct storing rotation
-
-private:
-    //File Content
-    int m_cubeWidth;
-    int m_cubeHeight;
-    int m_cubeDepth;
-
-    int m_indexWidth;
-    int m_indexHeight;
-    int m_indexDepth;
-
-    int m_nonEmpty8x8x8Cube;
-
-    unsigned long *m_8x8x8CubeIndexArray;
-    bool *m_8x8x8InternalBoolIndex;
-    //TODO: Change int to char(when binary)
-    unsigned int *m_pixelsData;
-};
-*/
 #endif // GVIMAGE_H

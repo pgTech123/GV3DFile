@@ -11,11 +11,13 @@ class GVIndexCube
 {
 public:
     GVIndexCube();
-    GVIndexCube(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData, GVIndexCube** p_GVImageArray);
+    GVIndexCube(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData,
+                bool* p_bPixelFilled, GVIndexCube** p_GVImageArray);
 
 
     //SETTER
-    bool setImageProperty(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData);
+    bool setImageProperty(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData,
+                          bool* p_bPixelFilled);
     void setGVIndexStorageReference(GVIndexCube** p_GVImageArray);
 
     //GETTER
@@ -35,10 +37,11 @@ private:
     unsigned int m_uiID;
 
 protected:
-    //FINAL IMAGE INFO
+    //GLOBAL IMAGE DATA REFERENCES
     int* m_p_iImageWidth;
     int* m_p_iImageHeight;
     unsigned char* m_p_ucImageData;
+    bool* m_p_bPixelFilled;
     GVIndexCube** m_p_GVImageArray;
 
 private:
@@ -60,11 +63,6 @@ protected:                   //TODO: Verify when everything is done what can be 
     int m_iArrPosXRotation[9];      //m_iArrPosXRotation[0] = center absolute ???
     int m_iArrPosYRotation[9];      //m_iArrPosYRotation[0] = center absolute ???
     char m_cSortedByDstFromScreen[8];   //index begin at 0
-
-
-    //NEW IF WE WANT HD???
-    char *m_p_cPixelFilledLow;      //When bit high=> already drawn, when low=> empty
-    char *m_p_cPixelFilledHigh;     //When bit high=> already drawn, when low=> empty
 
 };
 
