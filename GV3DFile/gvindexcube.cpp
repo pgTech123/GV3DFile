@@ -114,6 +114,7 @@ void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relati
         int iCenterPointXRounded = (int)round(dCenterPointX);
         int iCenterPointYRounded = (int)round(dCenterPointY);
 
+        unsigned char ucIndexPixel = 0;
         //RENDER PIXELS IN ORDER
         for(int i = 0; i < 8; i++)
         {
@@ -121,10 +122,78 @@ void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relati
             if((m_ucMap & (0x01 << i)))
             {
                 //ACCESS CORRESPONDING PIXEL AND VERIFY IF IT IS NOT WRITTEN YET
-                //if(!m_p_bPixelFilled[TODO])
+                if(iArrPosXRotation[ucSortedByDstFromScreen[i]] < 0)
                 {
-                    //WRITE PIXEL
+                    if(iArrPosYRotation[ucSortedByDstFromScreen[i]] < 0)
+                    {
+                        //  ---------
+                        //  | x |   |
+                        //  ---------
+                        //  |   |   |
+                        //  ---------
+                        if(!m_p_bPixelFilled[(iCenterPointXRounded-1)+((iCenterPointYRounded-1)*(*m_p_iImageWidth))])
+                        {
+                            //WRITE PIXEL
+                            m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3] = *(m_ucRed + ucIndexPixel);
+                            m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucIndexPixel];
+                            m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucIndexPixel];
+                            m_p_bPixelFilled[(iCenterPointXRounded-1)+((iCenterPointYRounded-1)*(*m_p_iImageWidth))] = true;
+                        }
+                    }
+                    else
+                    {
+                        //  ---------
+                        //  |   |   |
+                        //  ---------
+                        //  | x |   |
+                        //  ---------
+                        if(!m_p_bPixelFilled[(iCenterPointXRounded-1)+((iCenterPointYRounded)*(*m_p_iImageWidth))])
+                        {
+                            //WRITE PIXEL
+                            m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded)*(*m_p_iImageWidth))*3] = m_ucRed[ucIndexPixel];
+                            m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucIndexPixel];
+                            m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucIndexPixel];
+                            m_p_bPixelFilled[(iCenterPointXRounded-1)+((iCenterPointYRounded)*(*m_p_iImageWidth))] = true;
+                        }
+                    }
                 }
+                else
+                {
+                    if(iArrPosYRotation[ucSortedByDstFromScreen[i]] < 0)
+                    {
+                        //  ---------
+                        //  |   |x  |
+                        //  ---------
+                        //  |   |   |
+                        //  ---------
+                        if(!m_p_bPixelFilled[(iCenterPointXRounded)+((iCenterPointYRounded-1)*(*m_p_iImageWidth))])
+                        {
+                            //WRITE PIXEL
+                            m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3] = m_ucRed[ucIndexPixel];
+                            m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucIndexPixel];
+                            m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucIndexPixel];
+                            m_p_bPixelFilled[(iCenterPointXRounded)+((iCenterPointYRounded-1)*(*m_p_iImageWidth))] = true;
+                        }
+                    }
+                    else
+                    {
+                        //  ---------
+                        //  |   |   |
+                        //  ---------
+                        //  |   | x |
+                        //  ---------
+                        if(!m_p_bPixelFilled[(iCenterPointXRounded)+((iCenterPointYRounded)*(*m_p_iImageWidth))])
+                        {
+                            //WRITE PIXEL
+                            //TESTS: THE ONE CALLED WITH "8" or "4" and default rotation
+                            m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3] = m_ucRed[ucIndexPixel];
+                            m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucIndexPixel];
+                            m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucIndexPixel];
+                            m_p_bPixelFilled[(iCenterPointXRounded)+((iCenterPointYRounded)*(*m_p_iImageWidth))] = true;
+                        }
+                    }
+                }
+                ucIndexPixel++;
             }
         }
     }

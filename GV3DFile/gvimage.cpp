@@ -97,7 +97,7 @@ int GVImage::openFile(char* p_cFilename)
 
         m_iArrCubeAtLevel = new int[m_iNumberOfLevels];
 
-        //SET SIZE OF ARRAY TO 0 BACAUSE NEW READING
+        //SET SIZE OF ARRAY TO 0 BECAUSE NEW READING
         m_iSizeOfGVImageArray = 0;
 
         //DECLARATION BUFFER
@@ -117,9 +117,9 @@ int GVImage::openFile(char* p_cFilename)
 
         int iWritingNextCubeIndex = 0;
 
-        unsigned char ucRedArr[8];
-        unsigned char ucGreenArr[8];
-        unsigned char ucBlueArr[8];
+        unsigned int ucRedArr[8];
+        unsigned int ucGreenArr[8];
+        unsigned int ucBlueArr[8];
 
         //READ MAP AND PIXELS FOR NUMBER OF MAPS IN LEVEL 0
         for(int i = 0; i < m_iArrCubeAtLevel[0]; i++)
@@ -148,13 +148,25 @@ int GVImage::openFile(char* p_cFilename)
                 file >> ucBlueArr[j];
             }
             //FILL CUBE
-            m_p_GVImageArray[iWritingNextCubeIndex]->addPixelsCube(iWritingNextCubeIndex,
-                                                                   ucMap,
-                                                                   ucRedArr,
-                                                                   ucGreenArr,
-                                                                   ucBlueArr);
+                // !!!!!!!!TO UNCOMMENT!!!!!!!!!!!
+                /*m_p_GVImageArray[iWritingNextCubeIndex]->addPixelsCube(iWritingNextCubeIndex,
+                                                                       ucMap,
+                                                                       ucRedArr,
+                                                                       ucGreenArr,
+                                                                       ucBlueArr);*/
+                //TO REMOVE: TEST PURPOSE ONLY!!!!!!!!!!!
+                this->addPixelsCube(iWritingNextCubeIndex,
+                                    ucMap,
+                                    (unsigned char*)ucRedArr,
+                                    (unsigned char*)ucGreenArr,
+                                    (unsigned char*)ucBlueArr);
+                //END TEST
+
             iWritingNextCubeIndex ++;
         }
+
+
+
 
 
         //TODO

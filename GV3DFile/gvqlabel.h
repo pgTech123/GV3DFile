@@ -10,6 +10,8 @@
 
 #include <gvimage.h>
 
+#define PI  3.14159265359
+
 using namespace std;
 
 class GVQLabel : public QLabel
