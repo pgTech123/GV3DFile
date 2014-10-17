@@ -25,7 +25,7 @@ GVQLabel::GVQLabel()
 
 void GVQLabel::refreshScreen()
 {
-    GV->setRotation(0,PI);
+    GV->setRotation(PI, 3*PI/2);
     GV->generateImage();
 
     QImage img(m_ucharPixels, m_intWidth, m_intHeight, 3*m_intWidth, QImage::Format_RGB888); // 2 pixels width, 2 pixels height, 6 bytes per line, RGB888 format

@@ -49,7 +49,7 @@ int GVIndexCube::getHierarchyLevel()
     return m_iHierarchyLevel;
 }
 
-void GVIndexCube::addPixelsCube(unsigned int uiID, unsigned char ucMap, unsigned char* ucRed, unsigned char* ucGreen, unsigned char* ucBlue)
+void GVIndexCube::addPixelsCube(unsigned int uiID, unsigned char ucMap, int* ucRed, int* ucGreen, int* ucBlue)
 {
     m_uiID = uiID;
     m_ucMap = ucMap;
@@ -64,9 +64,9 @@ void GVIndexCube::addPixelsCube(unsigned int uiID, unsigned char ucMap, unsigned
     for(int i = 0; i < iPixelsNotEmpty; i++)
     {
         //ADD PIXEL
-        m_ucRed[i] = *(ucRed+i);
-        m_ucGreen[i] = *(ucGreen+i);
-        m_ucBlue[i] = *(ucBlue+i);
+        m_ucRed[i] = (unsigned char)ucRed[i];
+        m_ucGreen[i] = (unsigned char)ucGreen[i];
+        m_ucBlue[i] = (unsigned char)ucBlue[i];
     }
 }
 
@@ -185,7 +185,6 @@ void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relati
                         if(!m_p_bPixelFilled[(iCenterPointXRounded)+((iCenterPointYRounded)*(*m_p_iImageWidth))])
                         {
                             //WRITE PIXEL
-                            //TESTS: THE ONE CALLED WITH "8" or "4" and default rotation
                             m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3] = m_ucRed[ucIndexPixel];
                             m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucIndexPixel];
                             m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucIndexPixel];

@@ -24,7 +24,7 @@ public:
     int getHierarchyLevel();
 
     //ADD
-    void addPixelsCube(unsigned int uiID, unsigned char ucMap, unsigned char* ucRed, unsigned char* ucGreen, unsigned char* ucBlue);
+    void addPixelsCube(unsigned int uiID, unsigned char ucMap, int* ucRed, int* ucGreen, int* ucBlue);
     void addReferenceCube(unsigned int uiID, unsigned char ucMap, unsigned int* uiArrID);
 
     //TRANSFORM AND RENDER

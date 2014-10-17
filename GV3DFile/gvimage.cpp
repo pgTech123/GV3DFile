@@ -117,9 +117,9 @@ int GVImage::openFile(char* p_cFilename)
 
         int iWritingNextCubeIndex = 0;
 
-        unsigned int ucRedArr[8];
-        unsigned int ucGreenArr[8];
-        unsigned int ucBlueArr[8];
+        int ucRedArr[8];
+        int ucGreenArr[8];
+        int ucBlueArr[8];
 
         //READ MAP AND PIXELS FOR NUMBER OF MAPS IN LEVEL 0
         for(int i = 0; i < m_iArrCubeAtLevel[0]; i++)
@@ -157,9 +157,9 @@ int GVImage::openFile(char* p_cFilename)
                 //TO REMOVE: TEST PURPOSE ONLY!!!!!!!!!!!
                 this->addPixelsCube(iWritingNextCubeIndex,
                                     ucMap,
-                                    (unsigned char*)ucRedArr,
-                                    (unsigned char*)ucGreenArr,
-                                    (unsigned char*)ucBlueArr);
+                                    ucRedArr,
+                                    ucGreenArr,
+                                    ucBlueArr);
                 //END TEST
 
             iWritingNextCubeIndex ++;
