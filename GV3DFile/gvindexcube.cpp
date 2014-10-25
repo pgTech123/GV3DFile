@@ -104,7 +104,8 @@ void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relati
         {
             if(isBitHigh(m_ucMap, ucSortedByDstFromScreen[dst]))
             {
-                //TODO: Call ApplyRotation_and_Render on child IF potential new pixel to be written
+                //TODO: Call ApplyRotation_and_Render on child IF potential new pixel to
+                //be written(not already written)
             }
         }
     }

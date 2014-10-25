@@ -6,10 +6,12 @@ SOURCES += \
     gvbinaryfunctions.cpp \
     gvimage.cpp \
     gvindexcube.cpp \
-    gvqlabel.cpp
+    gvqlabel.cpp \
+    gvlookuptable.cpp
 
 HEADERS += \
     gvbinaryfunctions.h \
     gvimage.h \
     gvindexcube.h \
-    gvqlabel.h
+    gvqlabel.h \
+    gvlookuptable.h
