@@ -7,11 +7,13 @@ SOURCES += \
     gvimage.cpp \
     gvindexcube.cpp \
     gvqlabel.cpp \
-    gvlookuptable.cpp
+    gvlookuptable.cpp \
+    gvtests.cpp
 
 HEADERS += \
     gvbinaryfunctions.h \
     gvimage.h \
     gvindexcube.h \
     gvqlabel.h \
-    gvlookuptable.h
+    gvlookuptable.h \
+    gvtests.h

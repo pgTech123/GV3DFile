@@ -2,7 +2,7 @@
 
 GVQLabel::GVQLabel()
 {
-    GV = new GVImage("./../test.txt");
+    GV = new GVImage("./../test.i3c");
 
     //Refresh Image Timer Settings
     refreshTimer = new QTimer(this);

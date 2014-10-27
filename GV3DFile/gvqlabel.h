@@ -8,9 +8,8 @@
 #include <QImage>
 #include <QTimer>
 
-#include <gvimage.h>
-
-#define PI  3.14159265359
+#include "gvimage.h"
+#include "gvlookuptable.h"
 
 using namespace std;
 
