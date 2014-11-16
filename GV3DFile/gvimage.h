@@ -20,10 +20,10 @@ class GVImage: public GVIndexCube
 {
 public:
     GVImage();
-    GVImage(char* p_cFilename);
+    GVImage(const char* p_cFilename);
     ~GVImage();
 
-    int openFile(char* p_cFilename);
+    int openFile(const char* p_cFilename);
 
     int getWidth();
     int getHeight();
@@ -34,6 +34,8 @@ public:
     void generateImage();
 
 private:
+    gvLookUpTable *m_pLookupTable;
+
     int m_iSideLenght;
     int m_iNumberOfLevels;  //1 to n, where 1 => pixel level
     int* m_iArrCubeAtLevel;

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <math.h>
 #include "gvbinaryfunctions.h"
+#include "gvlookuptable.h"
 
 using namespace std;
 
@@ -29,7 +30,7 @@ public:
 
     //TRANSFORM AND RENDER
     void ApplyRotation_and_Render(double iArrPosXRotation[8], double iArrPosYRotation[8], unsigned char ucSortedByDstFromScreen[8],
-                                  double iCenterPointX, double iCenterPointY);
+                                  double iCenterPointX, double iCenterPointY, gvLookUpTable *lookupTable);
 
 
 private:

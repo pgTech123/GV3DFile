@@ -5,12 +5,14 @@ GVImage::GVImage()
 {
     m_dTheta = 0;
     m_dPhi = 0;
+    m_pLookupTable = new gvLookUpTable();
 }
 
-GVImage::GVImage(char* p_cFilename)
+GVImage::GVImage(const char* p_cFilename)
 {
     m_dTheta = 0;
     m_dPhi = 0;
+    m_pLookupTable = new gvLookUpTable();
     openFile(p_cFilename);
 }
 
@@ -19,7 +21,7 @@ GVImage::~GVImage()
     //TODO: Faire le menage
 }
 
-int GVImage::openFile(char* p_cFilename)
+int GVImage::openFile(const char* p_cFilename)
 {
 
     cout << "Trying to reach file ... " << endl;
@@ -241,7 +243,8 @@ void GVImage::generateImage()
                              m_dScreenRotatedCornerY,
                              m_dCornerSortedByDst,
                              (double)m_iCenterPointX,
-                             (double)m_iCenterPointY);
+                             (double)m_iCenterPointY,
+                             m_pLookupTable);
 
     //FILL ALL EMPTY PIXELS IN BLACK
     for(int i = 0; i < (*m_p_iImageWidth)*(*m_p_iImageHeight); i++)

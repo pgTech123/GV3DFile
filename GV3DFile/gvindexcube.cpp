@@ -94,7 +94,8 @@ void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relati
                                             double iArrPosYRotation[8], //relative
                                             unsigned char ucSortedByDstFromScreen[8],
                                             double dCenterPointX,
-                                            double dCenterPointY)
+                                            double dCenterPointY,
+                                            gvLookUpTable *lookupTable)
 {
     //TODO: PROTECTION IF ADDRESSES NULL
     if(m_iHierarchyLevel != 0)

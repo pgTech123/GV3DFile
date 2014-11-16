@@ -1,7 +1,6 @@
 #ifndef GVLOOKUPTABLE_H
 #define GVLOOKUPTABLE_H
 
-#include <iostream>
 #include <math.h>
 
 #define DEFAULT_ARRAY_SIZE  720
