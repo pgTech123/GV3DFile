@@ -16,16 +16,16 @@ GVQLabel::GVQLabel()
     initializeRenderingWidget("./image_test.i3c");
 }
 
-GVQLabel::GVQLabel(const char* c_p_Path)
+GVQLabel::GVQLabel(const char* p_cPath)
 {
     /* Load the Image from the Specified Location */
-    initializeRenderingWidget(c_p_Path);
+    initializeRenderingWidget(p_cPath);
 }
 
-void GVQLabel::initializeRenderingWidget(const char* c_p_Path)
+void GVQLabel::initializeRenderingWidget(const char* p_cPath)
 {
     /* Creation of the 3D image */
-    GV = new GVImage(c_p_Path);
+    GV = new GVImage(p_cPath);
 
     /* Refresh Image Callback */
     refreshTimer = new QTimer(this);

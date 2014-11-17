@@ -31,10 +31,10 @@ class GVQLabel : public QLabel
 
 public:
     explicit GVQLabel();
-    GVQLabel(const char* c_p_Path);
+    GVQLabel(const char* p_cPath);
 
 private:
-    void initializeRenderingWidget(const char* c_p_Path);
+    void initializeRenderingWidget(const char* p_cPath);
 
 private slots:
     void refreshScreen();

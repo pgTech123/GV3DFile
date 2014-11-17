@@ -1,189 +1,303 @@
-#include "gvimage.h"
+/*************************************************************************
+ * Project:     GV3D File
+ *
+ * File Name:   GVImage.cpp
+ *
+ * Author:      Pascal Gendron
+ *
+ * Version:     0.0.1
+ * ************************************************************************/
 
+#include "gvimage.h"
 
 GVImage::GVImage()
 {
-    m_dTheta = 0;
-    m_dPhi = 0;
-    m_pLookupTable = new gvLookUpTable();
+    initializeImage();
 }
 
 GVImage::GVImage(const char* p_cFilename)
 {
-    m_dTheta = 0;
-    m_dPhi = 0;
-    m_pLookupTable = new gvLookUpTable();
+    initializeImage();
     openFile(p_cFilename);
 }
 
 GVImage::~GVImage()
 {
-    //TODO: Faire le menage
+    deleteCurrentImage();
+}
+
+void GVImage::initializeImage()
+{
+    m_bImageStored =false;
+    m_dTheta = 0;
+    m_dPhi = 0;
+    m_pLookupTable = new gvLookUpTable();
 }
 
 int GVImage::openFile(const char* p_cFilename)
 {
-
-    cout << "Trying to reach file ... " << endl;
-
     fstream file;
+
     file.open(p_cFilename);
 
     if(file.is_open()){
-
-        cout << "File Opened" << endl;
-
-        //READ CUBE SIDE LENGHT
-        file >> m_iSideLenght;
-        if(m_iSideLenght <= 1)
-        {
-            m_iSideLenght = 0;
-            return INVALID_CUBE_SIZE;
-        }
-
-        //VERIFY BASE 2
-        if(!isBase2(m_iSideLenght))
-        {
-            m_iSideLenght = 0;
-            return SIZE_NOT_BASE_2;
-        }
-
-        cout << "Side Lenght: " << m_iSideLenght << endl;
-
-        //SET IMAGE DATA
-        m_p_iImageWidth = new int(2*m_iSideLenght);
-        m_p_iImageHeight = new int(2*m_iSideLenght);
-        m_p_ucImageData = new unsigned char[(*m_p_iImageWidth) * (*m_p_iImageHeight) * NUMBER_OF_CHANNELS];
-        m_p_bPixelFilled = new bool[(*m_p_iImageWidth) * (*m_p_iImageHeight)];
-
-        //CENTER POINT
-        m_iCenterPointX = (*m_p_iImageWidth)/2;     //OPTIMISATION POSSIBLE
-        m_iCenterPointY = (*m_p_iImageHeight)/2;
-
-        //UNROTATED CORNERS
-        m_iUnrotatedCornerX[0] = m_iCenterPointX - m_iSideLenght/2;       //(optimisable by m_iSideLenght/2)
-        m_iUnrotatedCornerY[0] = m_iCenterPointY + m_iSideLenght/2;
-        m_iUnrotatedCornerZ[0] = m_iSideLenght/2;
-
-        m_iUnrotatedCornerX[1] = m_iCenterPointX + m_iSideLenght/2;
-        m_iUnrotatedCornerY[1] = m_iCenterPointY + m_iSideLenght/2;
-        m_iUnrotatedCornerZ[1] = m_iSideLenght/2;
-
-        m_iUnrotatedCornerX[2] = m_iCenterPointX + m_iSideLenght/2;
-        m_iUnrotatedCornerY[2] = m_iCenterPointY - m_iSideLenght/2;
-        m_iUnrotatedCornerZ[2] = m_iSideLenght/2;
-
-        m_iUnrotatedCornerX[3] = m_iCenterPointX - m_iSideLenght/2;
-        m_iUnrotatedCornerY[3] = m_iCenterPointY - m_iSideLenght/2;
-        m_iUnrotatedCornerZ[3] = m_iSideLenght/2;
-
-        m_iUnrotatedCornerX[4] = m_iCenterPointX - m_iSideLenght/2;
-        m_iUnrotatedCornerY[4] = m_iCenterPointY + m_iSideLenght/2;
-        m_iUnrotatedCornerZ[4] = -(m_iSideLenght/2);
-
-        m_iUnrotatedCornerX[5] = m_iCenterPointX + m_iSideLenght/2;
-        m_iUnrotatedCornerY[5] = m_iCenterPointY + m_iSideLenght/2;
-        m_iUnrotatedCornerZ[5] = -(m_iSideLenght/2);
-
-        m_iUnrotatedCornerX[6] = m_iCenterPointX + m_iSideLenght/2;
-        m_iUnrotatedCornerY[6] = m_iCenterPointY - m_iSideLenght/2;
-        m_iUnrotatedCornerZ[6] = -(m_iSideLenght/2);
-
-        m_iUnrotatedCornerX[7] = m_iCenterPointX - m_iSideLenght/2;
-        m_iUnrotatedCornerY[7] = m_iCenterPointY - m_iSideLenght/2;
-        m_iUnrotatedCornerZ[7] = -(m_iSideLenght/2);
-
-        //COMPUTE NUMBER OF LEVELS
-        m_iNumberOfLevels = firstHighBit(m_iSideLenght);
-        cout << "Number of Levels: " << m_iNumberOfLevels << endl;
-
-        m_iArrCubeAtLevel = new int[m_iNumberOfLevels];
-
-        //SET SIZE OF ARRAY TO 0 BECAUSE NEW READING
-        m_iSizeOfGVImageArray = 0;
-
-        //DECLARATION BUFFER
-        int iBuffer = 0;
-
-        //READ NUMBER OF MAP FOR EACH LEVEL
-        for(int i = 0; i < m_iNumberOfLevels; i++)
-        {
-            file >> iBuffer;
-            m_iArrCubeAtLevel[i] = iBuffer;
-            m_iSizeOfGVImageArray += iBuffer;
-        }
-        cout << "Number of Cubes: " << m_iSizeOfGVImageArray << endl;
-
-        //ALLOC GVIMAGEARRAY (ARRAY OF POINTER OF CUBES)
-        m_p_GVImageArray = new GVIndexCube*[m_iSizeOfGVImageArray];
-
-        int iWritingNextCubeIndex = 0;
-
-        int ucRedArr[8];
-        int ucGreenArr[8];
-        int ucBlueArr[8];
-
-        //READ MAP AND PIXELS FOR NUMBER OF MAPS IN LEVEL 0
-        for(int i = 0; i < m_iArrCubeAtLevel[0]; i++)
-        {
-            //COPY REFERENCE OF EACH CUBE IN ARRAY M_P_GVIMAGEARRAY
-            m_p_GVImageArray[iWritingNextCubeIndex] = new GVIndexCube(&*m_p_iImageWidth,
-                                                                      &*m_p_iImageHeight,
-                                                                      &*m_p_ucImageData,
-                                                                      &*m_p_bPixelFilled,
-                                                                      &m_p_GVImageArray[0]);
-
-            file >> iBuffer;
-            unsigned char ucMap = (unsigned char)iBuffer;
-            int numberOfPixels = numberHighBits(iBuffer);
-            if(numberOfPixels > 8)
-            {
-                return FILE_CORRUPTED;
-            }
-            cout << "Number of Pixels in Cube: " << numberOfPixels << endl;
-
-            for(int j = 0; j < numberOfPixels; j++)
-            {
-                //PIXEL READING
-                file >> ucRedArr[j];
-                file >> ucGreenArr[j];
-                file >> ucBlueArr[j];
-            }
-            //FILL CUBE
-                // !!!!!!!!TO UNCOMMENT!!!!!!!!!!!
-                /*m_p_GVImageArray[iWritingNextCubeIndex]->addPixelsCube(iWritingNextCubeIndex,
-                                                                       ucMap,
-                                                                       ucRedArr,
-                                                                       ucGreenArr,
-                                                                       ucBlueArr);*/
-                //TO REMOVE: TEST PURPOSE ONLY!!!!!!!!!!!
-                this->addPixelsCube(iWritingNextCubeIndex,
-                                    ucMap,
-                                    ucRedArr,
-                                    ucGreenArr,
-                                    ucBlueArr);
-                //END TEST
-
-            iWritingNextCubeIndex ++;
-        }
-
-
-
-
-
-        //TODO
-        //READ MAP FOR EACH LEVEL FOR ALL THE OTHER LEVELS
-        //LINK EACH CHILD TO ITS PARENT
-
-        //CLOSING FILE
+        int iError = readImageFile(&file);
         file.close();
+        return iError;
+    }
+    else{
+        return UNABLE_TO_OPEN_FILE;
+    }
+}
 
-        return NO_ERRORS;
+int GVImage::readImageFile(fstream *file)
+{
+    if(m_bImageStored == true){
+        deleteCurrentImage();
     }
 
-    cout << "Unable to reach File" << endl;
+    int iError;
 
-    return UNABLE_TO_OPEN_FILE;
+    /* Read Cube Side Lenght */
+    int iSideLenghtUnverified;
+    *file >> iSideLenghtUnverified;
+    iError = verifyImageSideLenght(iSideLenghtUnverified);
+    if(iError != NO_ERRORS){
+        return iError;
+    }
+    //cout << "Side Lenght: " << m_iSideLenght << endl;     /* Debug */
+
+    /* Preparing to Read Image*/
+    setImageProperties();
+    setImageCenterPoint();
+    setUnrotatedCorners();
+    setNumberOfLevels();
+
+    /* Read Data */
+    readNumOfMaps(file);
+    iError = readCubes(file);
+    if(iError != NO_ERRORS){
+        return iError;
+    }
+
+    return NO_ERRORS;
+}
+
+int GVImage::verifyImageSideLenght(int iSideLenght)
+{
+    if(iSideLenght <= 1){
+        m_iSideLenght = 0;
+        return INVALID_CUBE_SIZE;
+    }
+    else if(!isBase2(iSideLenght)){
+        m_iSideLenght = 0;
+        return SIZE_NOT_BASE_2;
+    }
+    else{
+        m_iSideLenght = iSideLenght;
+        return NO_ERRORS;
+    }
+}
+
+void GVImage::setImageProperties()
+{
+    /* Viewport Defined as 2x cube lenght */
+    m_p_iImageWidth = new int(2*m_iSideLenght);
+    m_p_iImageHeight = new int(2*m_iSideLenght);
+
+    m_p_ucImageData = new unsigned char[(*m_p_iImageWidth) * (*m_p_iImageHeight) * NUMBER_OF_CHANNELS];
+    m_p_bPixelFilled = new bool[(*m_p_iImageWidth) * (*m_p_iImageHeight)];
+}
+
+void GVImage::setImageCenterPoint()
+{
+    m_iCenterPointX = (*m_p_iImageWidth)/2;
+    m_iCenterPointY = (*m_p_iImageHeight)/2;
+}
+
+void GVImage::setUnrotatedCorners()
+{
+    m_iUnrotatedCornerX[0] = m_iCenterPointX - m_iSideLenght/2;
+    m_iUnrotatedCornerY[0] = m_iCenterPointY + m_iSideLenght/2;
+    m_iUnrotatedCornerZ[0] = m_iSideLenght/2;
+
+    m_iUnrotatedCornerX[1] = m_iCenterPointX + m_iSideLenght/2;
+    m_iUnrotatedCornerY[1] = m_iCenterPointY + m_iSideLenght/2;
+    m_iUnrotatedCornerZ[1] = m_iSideLenght/2;
+
+    m_iUnrotatedCornerX[2] = m_iCenterPointX + m_iSideLenght/2;
+    m_iUnrotatedCornerY[2] = m_iCenterPointY - m_iSideLenght/2;
+    m_iUnrotatedCornerZ[2] = m_iSideLenght/2;
+
+    m_iUnrotatedCornerX[3] = m_iCenterPointX - m_iSideLenght/2;
+    m_iUnrotatedCornerY[3] = m_iCenterPointY - m_iSideLenght/2;
+    m_iUnrotatedCornerZ[3] = m_iSideLenght/2;
+
+    m_iUnrotatedCornerX[4] = m_iCenterPointX - m_iSideLenght/2;
+    m_iUnrotatedCornerY[4] = m_iCenterPointY + m_iSideLenght/2;
+    m_iUnrotatedCornerZ[4] = -(m_iSideLenght/2);
+
+    m_iUnrotatedCornerX[5] = m_iCenterPointX + m_iSideLenght/2;
+    m_iUnrotatedCornerY[5] = m_iCenterPointY + m_iSideLenght/2;
+    m_iUnrotatedCornerZ[5] = -(m_iSideLenght/2);
+
+    m_iUnrotatedCornerX[6] = m_iCenterPointX + m_iSideLenght/2;
+    m_iUnrotatedCornerY[6] = m_iCenterPointY - m_iSideLenght/2;
+    m_iUnrotatedCornerZ[6] = -(m_iSideLenght/2);
+
+    m_iUnrotatedCornerX[7] = m_iCenterPointX - m_iSideLenght/2;
+    m_iUnrotatedCornerY[7] = m_iCenterPointY - m_iSideLenght/2;
+    m_iUnrotatedCornerZ[7] = -(m_iSideLenght/2);
+}
+
+void GVImage::setNumberOfLevels()
+{
+    m_iNumberOfLevels = firstHighBit(m_iSideLenght);
+
+    /* Debug */
+    cout << "Number of Levels: " << m_iNumberOfLevels << endl;
+
+    m_iArrCubeAtLevel = new int[m_iNumberOfLevels];
+}
+
+void GVImage::readNumOfMaps(fstream *file)
+{
+    int iBuffer = 0;
+    m_iNumberOfCubes = 0;
+
+    /* Store cubes at each level and count the total number of cubes */
+    for(int i = 0; i < m_iNumberOfLevels; i++)
+    {
+        *file >> iBuffer;
+        m_iArrCubeAtLevel[i] = iBuffer;
+        m_iNumberOfCubes += iBuffer;
+    }
+
+    /* Debug */
+    cout << "Number of Cubes: " << m_iNumberOfCubes << endl;
+
+    /* Create Cube Pointer Array */
+    m_p_GVImageArray = new GVIndexCube*[m_iNumberOfCubes];
+}
+
+int GVImage::readCubes(fstream *file)
+{
+    int iError = readPixelCubes(file);
+    if(iError != NO_ERRORS){
+        return iError;
+    }
+
+    iError = readIndexCubes(file);
+    if(iError != NO_ERRORS){
+        return iError;
+    }
+
+    return NO_ERRORS;
+}
+
+int GVImage::readPixelCubes(fstream *file)
+{
+    unsigned char ucMap = 0;
+    int iBufRedArr[8];
+    int iBufGreenArr[8];
+    int iBufBlueArr[8];
+    int iCubeBeingWritten = 0;
+    int iNumOfPixels;
+    int iError;
+
+    /* Read Pixel Cubes */
+    for(int i = 0; i < m_iArrCubeAtLevel[0]; i++)
+    {
+        /* Create Cube */
+        m_p_GVImageArray[iCubeBeingWritten] = new GVIndexCube(&*m_p_iImageWidth,
+                                                                  &*m_p_iImageHeight,
+                                                                  &*m_p_ucImageData,
+                                                                  &*m_p_bPixelFilled,
+                                                                  &m_p_GVImageArray[0]);
+        iError = readMap(file, &ucMap, &iNumOfPixels);
+        if(iError != NO_ERRORS){
+            return iError;
+        }
+
+        for(int j = 0; j < iNumOfPixels; j++)
+        {
+            //PIXEL READING
+            *file >> iBufRedArr[j];
+            *file >> iBufGreenArr[j];
+            *file >> iBufBlueArr[j];
+        }
+
+        if(m_iNumberOfLevels == 1){
+            this->addPixelsCube(iCubeBeingWritten,
+                                ucMap,
+                                iBufRedArr,
+                                iBufGreenArr,
+                                iBufBlueArr);
+        }
+        else{
+            m_p_GVImageArray[iCubeBeingWritten]->addPixelsCube(iCubeBeingWritten,
+                                                                ucMap,
+                                                                iBufRedArr,
+                                                                iBufGreenArr,
+                                                                iBufBlueArr);
+        }
+
+        iCubeBeingWritten ++;
+    }
+    return NO_ERRORS;
+}
+
+int GVImage::readIndexCubes(fstream *file)
+{
+    unsigned char ucMap = 0;
+    int iNumOfChild = 0;
+    int iAddressCubesCursorOffset = 0;
+    int iError;
+
+    for(int level = 1; level < m_iNumberOfLevels; level++)
+    {
+        for(int i = 0; i < m_iArrCubeAtLevel[level]; i++)
+        {
+            iError = readMap(file, &ucMap, &iNumOfChild);
+            if(iError != NO_ERRORS){
+                return iError;
+            }
+
+            /* Get child cube addresses */
+            //TODO
+
+            /* Set cube with child addresses */
+            if(m_iNumberOfLevels == level){
+
+            }
+            else{
+
+            }
+        }
+    }
+
+    return NO_ERRORS;
+}
+
+int GVImage::readMap(fstream *file, unsigned char* ucMap, int* iNumOfPix)
+{
+    int iBufMap;
+    *file >> iBufMap;
+    *iNumOfPix = numberHighBits(iBufMap);
+    if(*iNumOfPix > 8){
+        return FILE_CORRUPTED;
+    }
+    *ucMap = (unsigned char)iBufMap;
+
+    /* Debug */
+    cout << "Number of Pixels in Cube: " << iNumOfPix << endl;
+
+    return NO_ERRORS;
+}
+
+void GVImage::deleteCurrentImage()
+{
+    //TODO:
 }
 
 int GVImage::getWidth()
@@ -238,7 +352,7 @@ void GVImage::generateImage()
     //ORDER POINTS (Z AXIS) (SORT BY DST)
     sort(m_dDstFromScreenRotated ,m_dCornerSortedByDst);
 
-    //APPLY ROTATION AND RENDER ON CHILDREN
+    //APPLY ROTATION AND RENDER CHILDREN
     ApplyRotation_and_Render(m_dScreenRotatedCornerX,
                              m_dScreenRotatedCornerY,
                              m_dCornerSortedByDst,

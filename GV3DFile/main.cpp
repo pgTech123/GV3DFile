@@ -56,7 +56,8 @@ int main(int argc, char *argv[])
     window->setWindowTitle(APPLICATION_NAME);
     window->setWindowIcon(*icon);
 
-    window->show();      /* Display Window */
+    /* Display Window */
+    window->show();
 
     return app.exec();
 }
