@@ -275,10 +275,10 @@ void GVIndexCube::computeChildCorners(double* dArrPosXRotation,
         m_dChildComputedCornersY[0] = dMidFaceYArr[0];
         m_dChildComputedCornersX[1] = dMidArrX[1];
         m_dChildComputedCornersY[1] = dMidArrY[1];
-        m_dChildComputedCornersX[2] = dMidArrX[1];
-        m_dChildComputedCornersY[2] = dMidArrY[1];
-        m_dChildComputedCornersX[3] = dArrPosXRotation[2];
-        m_dChildComputedCornersY[3] = dArrPosYRotation[2];
+        m_dChildComputedCornersX[2] = dArrPosXRotation[2];
+        m_dChildComputedCornersY[2] = dArrPosYRotation[2];
+        m_dChildComputedCornersX[3] = dMidArrX[2];
+        m_dChildComputedCornersY[3] = dMidArrY[2];
         m_dChildComputedCornersX[4] = dCenterPointX;
         m_dChildComputedCornersY[4] = dCenterPointY;
         m_dChildComputedCornersX[5] = dMidFaceXArr[2];
@@ -289,19 +289,94 @@ void GVIndexCube::computeChildCorners(double* dArrPosXRotation,
         m_dChildComputedCornersY[7] = dMidFaceYArr[3];
     }
     else if(ucMapIndex == 3){
-
+        m_dChildComputedCornersX[0] = dMidArrX[3];
+        m_dChildComputedCornersY[0] = dMidArrY[3];
+        m_dChildComputedCornersX[1] = dMidFaceXArr[0];
+        m_dChildComputedCornersY[1] = dMidFaceYArr[0];
+        m_dChildComputedCornersX[2] = dMidArrX[2];
+        m_dChildComputedCornersY[2] = dMidArrY[2];
+        m_dChildComputedCornersX[3] = dArrPosXRotation[3];
+        m_dChildComputedCornersY[3] = dArrPosYRotation[3];
+        m_dChildComputedCornersX[4] = dMidFaceXArr[4];
+        m_dChildComputedCornersY[4] = dMidFaceYArr[4];
+        m_dChildComputedCornersX[5] = dCenterPointX;
+        m_dChildComputedCornersY[5] = dCenterPointY;
+        m_dChildComputedCornersX[6] = dMidFaceXArr[3];
+        m_dChildComputedCornersY[6] = dMidFaceYArr[3];
+        m_dChildComputedCornersX[7] = dMidArrX[7];
+        m_dChildComputedCornersY[7] = dMidArrY[7];
     }
     else if(ucMapIndex == 4){
-
+        m_dChildComputedCornersX[0] = dMidArrX[4];
+        m_dChildComputedCornersY[0] = dMidArrY[4];
+        m_dChildComputedCornersX[1] = dMidFaceXArr[1];
+        m_dChildComputedCornersY[1] = dMidFaceYArr[1];
+        m_dChildComputedCornersX[2] = dCenterPointX;
+        m_dChildComputedCornersY[2] = dCenterPointY;
+        m_dChildComputedCornersX[3] = dMidFaceXArr[4];
+        m_dChildComputedCornersY[3] = dMidFaceYArr[4];
+        m_dChildComputedCornersX[4] = dArrPosXRotation[4];
+        m_dChildComputedCornersY[4] = dArrPosYRotation[4];
+        m_dChildComputedCornersX[5] = dMidArrX[8];
+        m_dChildComputedCornersY[5] = dMidArrY[8];
+        m_dChildComputedCornersX[6] = dMidFaceXArr[5];
+        m_dChildComputedCornersY[6] = dMidFaceYArr[5];
+        m_dChildComputedCornersX[7] = dMidArrX[11];
+        m_dChildComputedCornersY[7] = dMidArrY[11];
     }
     else if(ucMapIndex == 5){
-
+        m_dChildComputedCornersX[0] = dMidFaceXArr[1];
+        m_dChildComputedCornersY[0] = dMidFaceYArr[1];
+        m_dChildComputedCornersX[1] = dMidArrX[5];
+        m_dChildComputedCornersY[1] = dMidArrY[5];
+        m_dChildComputedCornersX[2] = dMidFaceXArr[2];
+        m_dChildComputedCornersY[2] = dMidFaceYArr[2];
+        m_dChildComputedCornersX[3] = dCenterPointX;
+        m_dChildComputedCornersY[3] = dCenterPointY;
+        m_dChildComputedCornersX[4] = dMidArrX[8];
+        m_dChildComputedCornersY[4] = dMidArrY[8];
+        m_dChildComputedCornersX[5] = dArrPosXRotation[5];
+        m_dChildComputedCornersY[5] = dArrPosYRotation[5];
+        m_dChildComputedCornersX[6] = dMidArrX[9];
+        m_dChildComputedCornersY[6] = dMidArrY[9];
+        m_dChildComputedCornersX[7] = dMidFaceXArr[5];
+        m_dChildComputedCornersY[7] = dMidFaceYArr[5];
     }
     else if(ucMapIndex == 6){
-
+        m_dChildComputedCornersX[0] = dCenterPointX;
+        m_dChildComputedCornersY[0] = dCenterPointY;
+        m_dChildComputedCornersX[1] = dMidFaceXArr[2];
+        m_dChildComputedCornersY[1] = dMidFaceYArr[2];
+        m_dChildComputedCornersX[2] = dMidArrX[6];
+        m_dChildComputedCornersY[2] = dMidArrY[6];
+        m_dChildComputedCornersX[3] = dMidFaceXArr[3];
+        m_dChildComputedCornersY[3] = dMidFaceYArr[3];
+        m_dChildComputedCornersX[4] = dMidFaceXArr[5];
+        m_dChildComputedCornersY[4] = dMidFaceYArr[5];
+        m_dChildComputedCornersX[5] = dMidArrX[9];
+        m_dChildComputedCornersY[5] = dMidArrY[9];
+        m_dChildComputedCornersX[6] = dArrPosXRotation[6];
+        m_dChildComputedCornersY[6] = dArrPosYRotation[6];
+        m_dChildComputedCornersX[7] = dMidArrX[10];
+        m_dChildComputedCornersY[7] = dMidArrY[10];
     }
     else if(ucMapIndex == 7){
-
+        m_dChildComputedCornersX[0] = dMidFaceXArr[4];
+        m_dChildComputedCornersY[0] = dMidFaceYArr[4];
+        m_dChildComputedCornersX[1] = dCenterPointX;
+        m_dChildComputedCornersY[1] = dCenterPointY;
+        m_dChildComputedCornersX[2] = dMidFaceXArr[3];
+        m_dChildComputedCornersY[2] = dMidFaceYArr[3];
+        m_dChildComputedCornersX[3] = dMidArrX[7];
+        m_dChildComputedCornersY[3] = dMidArrY[7];
+        m_dChildComputedCornersX[4] = dMidArrX[11];
+        m_dChildComputedCornersY[4] = dMidArrY[11];
+        m_dChildComputedCornersX[5] = dMidFaceXArr[5];
+        m_dChildComputedCornersY[5] = dMidFaceYArr[5];
+        m_dChildComputedCornersX[6] = dMidArrX[10];
+        m_dChildComputedCornersY[6] = dMidArrY[10];
+        m_dChildComputedCornersX[7] = dArrPosXRotation[7];
+        m_dChildComputedCornersY[7] = dArrPosYRotation[7];
     }
     else{
         return;
@@ -311,7 +386,15 @@ void GVIndexCube::computeChildCorners(double* dArrPosXRotation,
 
 void GVIndexCube::findCenterPoint()
 {
-    //TODO: work with private members
+    double dMidVerticalX[2];
+    double dMidVerticalY[2];
+    dMidVerticalX[0] = (m_dChildComputedCornersX[0]+m_dChildComputedCornersX[4])/2;
+    dMidVerticalY[0] = (m_dChildComputedCornersY[0]+m_dChildComputedCornersY[4])/2;
+    dMidVerticalX[1] = (m_dChildComputedCornersX[2]+m_dChildComputedCornersX[6])/2;
+    dMidVerticalY[1] = (m_dChildComputedCornersY[2]+m_dChildComputedCornersY[6])/2;
+
+    m_dChildCenterPointX = (dMidVerticalX[0] + dMidVerticalX[1])/2;
+    m_dChildCenterPointY = (dMidVerticalY[0] + dMidVerticalY[1])/2;
 }
 
 bool GVIndexCube::isChildFullyHidden()
@@ -340,9 +423,9 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
         if((m_ucMap & (0x01 << i)))
         {
             /* Verify if projected pixel is already written */
-            if(iArrPosXRotation[ucSortedByDstFromScreen[i]] < 0)
+            if(iArrPosXRotation[ucSortedByDstFromScreen[i]] < iCenterPointXRounded)
             {
-                if(iArrPosYRotation[ucSortedByDstFromScreen[i]] < 0)
+                if(iArrPosYRotation[ucSortedByDstFromScreen[i]] < iCenterPointYRounded)
                 {
                     /* Pixel Position */
                     //  ---------
@@ -379,8 +462,9 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
             }
             else
             {
-                if(iArrPosYRotation[ucSortedByDstFromScreen[i]] < 0)
+                if(iArrPosYRotation[ucSortedByDstFromScreen[i]] < iCenterPointYRounded)
                 {
+
                     /* Pixel Position */
                     //  ---------
                     //  |   |x  |

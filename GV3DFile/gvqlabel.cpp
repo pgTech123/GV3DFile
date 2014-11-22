@@ -48,7 +48,7 @@ void GVQLabel::initializeRenderingWidget(const char* p_cPath)
 void GVQLabel::refreshScreen()
 {
     /* Image Preparation and Rendering */
-    GV->setRotation(PI, 3*PI/2);
+    GV->setRotation(0, 0);
     GV->generateImage();
 
     /* Fit Pixel Map for the Window Resolution */

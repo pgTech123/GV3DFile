@@ -65,7 +65,7 @@ int GVImage::readImageFile(fstream *file)
     if(iError != NO_ERRORS){
         return iError;
     }
-    //cout << "Side Lenght: " << m_iSideLenght << endl;     /* Debug */
+    cout << "Side Lenght: " << m_iSideLenght << endl;     /* Debug */
 
     /* Preparing to Read Image*/
     setImageProperties();
@@ -126,28 +126,28 @@ void GVImage::setUnrotatedCorners()
     m_iUnrotatedCornerZ[1] = m_iSideLenght/2;
 
     m_iUnrotatedCornerX[2] = m_iCenterPointX + m_iSideLenght/2;
-    m_iUnrotatedCornerY[2] = m_iCenterPointY - m_iSideLenght/2;
-    m_iUnrotatedCornerZ[2] = m_iSideLenght/2;
+    m_iUnrotatedCornerY[2] = m_iCenterPointY + m_iSideLenght/2;
+    m_iUnrotatedCornerZ[2] = -1*(m_iSideLenght/2);
 
     m_iUnrotatedCornerX[3] = m_iCenterPointX - m_iSideLenght/2;
-    m_iUnrotatedCornerY[3] = m_iCenterPointY - m_iSideLenght/2;
-    m_iUnrotatedCornerZ[3] = m_iSideLenght/2;
+    m_iUnrotatedCornerY[3] = m_iCenterPointY + m_iSideLenght/2;
+    m_iUnrotatedCornerZ[3] = -1*(m_iSideLenght/2);
 
     m_iUnrotatedCornerX[4] = m_iCenterPointX - m_iSideLenght/2;
-    m_iUnrotatedCornerY[4] = m_iCenterPointY + m_iSideLenght/2;
-    m_iUnrotatedCornerZ[4] = -(m_iSideLenght/2);
+    m_iUnrotatedCornerY[4] = m_iCenterPointY - m_iSideLenght/2;
+    m_iUnrotatedCornerZ[4] = m_iSideLenght/2;
 
     m_iUnrotatedCornerX[5] = m_iCenterPointX + m_iSideLenght/2;
-    m_iUnrotatedCornerY[5] = m_iCenterPointY + m_iSideLenght/2;
-    m_iUnrotatedCornerZ[5] = -(m_iSideLenght/2);
+    m_iUnrotatedCornerY[5] = m_iCenterPointY - m_iSideLenght/2;
+    m_iUnrotatedCornerZ[5] = m_iSideLenght/2;
 
     m_iUnrotatedCornerX[6] = m_iCenterPointX + m_iSideLenght/2;
     m_iUnrotatedCornerY[6] = m_iCenterPointY - m_iSideLenght/2;
-    m_iUnrotatedCornerZ[6] = -(m_iSideLenght/2);
+    m_iUnrotatedCornerZ[6] = -1*(m_iSideLenght/2);
 
     m_iUnrotatedCornerX[7] = m_iCenterPointX - m_iSideLenght/2;
     m_iUnrotatedCornerY[7] = m_iCenterPointY - m_iSideLenght/2;
-    m_iUnrotatedCornerZ[7] = -(m_iSideLenght/2);
+    m_iUnrotatedCornerZ[7] = -1*(m_iSideLenght/2);
 }
 
 void GVImage::setNumberOfLevels()
@@ -186,7 +186,6 @@ int GVImage::readCubes(fstream *file)
     if(iError != NO_ERRORS){
         return iError;
     }
-
     iError = readIndexCubes(file);
     if(iError != NO_ERRORS){
         return iError;
@@ -264,7 +263,7 @@ int GVImage::readIndexCubes(fstream *file)
             }
 
             /* Set cube with child addresses */
-            if(m_iNumberOfLevels == level){
+            if(m_iNumberOfLevels == level+1){
                 this->addReferenceCube(ucMap, m_p_GVImageArray[iAddressCubesCursorOffset]);
             }
             else{
@@ -292,6 +291,7 @@ int GVImage::readMap(fstream *file, unsigned char* ucMap, int* iNumOfPix)
 
     /* Debug */
     cout << "Number of Pixels in Cube: " << *iNumOfPix << endl;
+    cout << "Map: " << iBufMap << endl;
 
     return NO_ERRORS;
 }
