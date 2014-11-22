@@ -213,7 +213,8 @@ int GVImage::readPixelCubes(fstream *file)
                                                                   &*m_p_iImageHeight,
                                                                   &*m_p_ucImageData,
                                                                   &*m_p_bPixelFilled,
-                                                                  &m_p_GVImageArray[0]);
+                                                                  &m_p_GVImageArray[0],
+                                                                  m_pLookupTable);
         iError = readMap(file, &ucMap, &iNumOfPixels);
         if(iError != NO_ERRORS){
             return iError;
@@ -228,15 +229,13 @@ int GVImage::readPixelCubes(fstream *file)
         }
 
         if(m_iNumberOfLevels == 1){
-            this->addPixelsCube(iCubeBeingWritten,
-                                ucMap,
+            this->addPixelsCube(ucMap,
                                 iBufRedArr,
                                 iBufGreenArr,
                                 iBufBlueArr);
         }
         else{
-            m_p_GVImageArray[iCubeBeingWritten]->addPixelsCube(iCubeBeingWritten,
-                                                                ucMap,
+            m_p_GVImageArray[iCubeBeingWritten]->addPixelsCube(ucMap,
                                                                 iBufRedArr,
                                                                 iBufGreenArr,
                                                                 iBufBlueArr);
@@ -252,6 +251,7 @@ int GVImage::readIndexCubes(fstream *file)
     unsigned char ucMap = 0;
     int iNumOfChild = 0;
     int iAddressCubesCursorOffset = 0;
+    int iCubeBeingWritten = m_iArrCubeAtLevel[0];
     int iError;
 
     for(int level = 1; level < m_iNumberOfLevels; level++)
@@ -263,16 +263,17 @@ int GVImage::readIndexCubes(fstream *file)
                 return iError;
             }
 
-            /* Get child cube addresses */
-            //TODO
-
             /* Set cube with child addresses */
             if(m_iNumberOfLevels == level){
-
+                this->addReferenceCube(ucMap, m_p_GVImageArray[iAddressCubesCursorOffset]);
             }
             else{
-
+                m_p_GVImageArray[iCubeBeingWritten]->addReferenceCube(ucMap,m_p_GVImageArray[iAddressCubesCursorOffset]);
             }
+
+            /* Update Offset */
+            iAddressCubesCursorOffset += iNumOfChild;
+            iCubeBeingWritten++;
         }
     }
 
@@ -290,7 +291,7 @@ int GVImage::readMap(fstream *file, unsigned char* ucMap, int* iNumOfPix)
     *ucMap = (unsigned char)iBufMap;
 
     /* Debug */
-    cout << "Number of Pixels in Cube: " << iNumOfPix << endl;
+    cout << "Number of Pixels in Cube: " << *iNumOfPix << endl;
 
     return NO_ERRORS;
 }
@@ -323,13 +324,13 @@ void GVImage::setRotation(double dTheta, double dPhi)
 
 void GVImage::generateImage()
 {
-    //INITIALLY EVERY PIXEL IS EMPTY
+    /* Initialize every pixels as empty */
     for(int i = 0; i < (*m_p_iImageWidth)*(*m_p_iImageHeight); i++)
     {
         m_p_bPixelFilled[i] = false;
     }
 
-    //COMPUTE EACH CORNER
+    /* Compute cube corners projected on the frame */
     for(int i = 0; i < 8; i++)
     {
         m_dScreenRotatedCornerX[i] = computePosXOnScreen(m_iUnrotatedCornerX[i],
@@ -349,18 +350,17 @@ void GVImage::generateImage()
                                                       m_dPhi);
     }
 
-    //ORDER POINTS (Z AXIS) (SORT BY DST)
+    /* Sort points on Z axis by distance */
     sort(m_dDstFromScreenRotated ,m_dCornerSortedByDst);
 
-    //APPLY ROTATION AND RENDER CHILDREN
+    /* Rendering */
     ApplyRotation_and_Render(m_dScreenRotatedCornerX,
                              m_dScreenRotatedCornerY,
                              m_dCornerSortedByDst,
                              (double)m_iCenterPointX,
-                             (double)m_iCenterPointY,
-                             m_pLookupTable);
+                             (double)m_iCenterPointY);
 
-    //FILL ALL EMPTY PIXELS IN BLACK
+    /* Fill every pixels left empty with black */
     for(int i = 0; i < (*m_p_iImageWidth)*(*m_p_iImageHeight); i++)
     {
         if(m_p_bPixelFilled[i] == false)
@@ -371,4 +371,5 @@ void GVImage::generateImage()
         }
     }
 }
+
 

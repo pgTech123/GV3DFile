@@ -12,6 +12,7 @@ using namespace std;
 //UNITARY TESTS
 void runTestSort();
 void runTestLookupTable();
+void runTestLookupTable(gvLookUpTable* tbl);
 
 
 #endif // GVTESTS_H

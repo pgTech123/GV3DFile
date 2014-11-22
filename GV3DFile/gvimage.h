@@ -34,7 +34,7 @@ using namespace std;
  * The purpose of this class is to represent the 3D Image. It is used by
  * the user to make actions on the image. It is also used to abstract the
  * building blocs of the image and to make the rendering process transparent
- * for the user.
+ * to the user.
  *************************************************************************/
 
 class GVImage: public GVIndexCube
@@ -78,8 +78,6 @@ private:
     /* Cube Rotation */
     double m_dTheta;
     double m_dPhi;
-
-    gvLookUpTable *m_pLookupTable;
 
     int m_iSideLenght;
     int m_iNumberOfLevels;  //1 to n, where 1 => pixel level

@@ -1,3 +1,13 @@
+/*************************************************************************
+ * Project:     GV3D File
+ *
+ * File Name:   GVIndexCube.h
+ *
+ * Author:      Pascal Gendron
+ *
+ * Version:     0.0.1
+ * ************************************************************************/
+
 #ifndef GVINDEXCUBE_H
 #define GVINDEXCUBE_H
 
@@ -8,63 +18,99 @@
 
 using namespace std;
 
+/*************************************************************************
+ * GVIndexCube Class:
+ *
+ * The purpose of this class is to represent a group of 8 or less storage
+ * space. These spaces can be filled by pixels values or by references to
+ * another GVIndexCube(child). This is the lowest building bloc of 3D images.
+ *************************************************************************/
+
 class GVIndexCube
 {
 public:
     GVIndexCube();
-    GVIndexCube(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData,
-                bool* p_bPixelFilled, GVIndexCube** p_GVImageArray);
+    GVIndexCube(int* p_iImageWidth,
+                int* p_iImageHeight,
+                unsigned char* p_ucImageData,
+                bool* p_bPixelFilled,
+                GVIndexCube** p_GVImageArray,
+                gvLookUpTable*& lookupTable);
 
-
-    //SETTER
-    bool setImageProperty(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData,
-                          bool* p_bPixelFilled);
+    /* Setters */
     void setGVIndexStorageReference(GVIndexCube** p_GVImageArray);
+    bool setImageProperty(int* p_iImageWidth,
+                          int* p_iImageHeight,
+                          unsigned char* p_ucImageData,
+                          bool* p_bPixelFilled);
 
-    //GETTER
+    /* Getters */
     int getHierarchyLevel();
 
-    //ADD
-    void addPixelsCube(unsigned int uiID, unsigned char ucMap, int* ucRed, int* ucGreen, int* ucBlue);
-    void addReferenceCube(unsigned int uiID, unsigned char ucMap, unsigned int* uiArrID);
+    /* Add pixel or reference */
+    void addPixelsCube(unsigned char ucMap, int* ucRed, int* ucGreen, int* ucBlue);
+    void addReferenceCube(unsigned char ucMap, GVIndexCube*& p_ChildCubeRef);
 
-    //TRANSFORM AND RENDER
-    void ApplyRotation_and_Render(double iArrPosXRotation[8], double iArrPosYRotation[8], unsigned char ucSortedByDstFromScreen[8],
-                                  double iCenterPointX, double iCenterPointY, gvLookUpTable *lookupTable);
-
+    /* Transform and render */
+    void ApplyRotation_and_Render(double iArrPosXRotation[8],
+                                    double iArrPosYRotation[8],
+                                    unsigned char ucSortedByDstFromScreen[8],
+                                    double dCenterPointX,
+                                    double dCenterPointY);
 
 private:
-    //GLOBAL
-    unsigned int m_uiID;
+    void initializeCube();
+    void renderReference(double iArrPosXRotation[8],
+                        double iArrPosYRotation[8],
+                        unsigned char ucSortedByDstFromScreen[8],
+                        double dCenterPointX,
+                        double dCenterPointY);
+    void renderPixel(double dArrPosXRotation[8],
+                        double dArrPosYRotation[8],
+                        unsigned char ucSortedByDstFromScreen[8],
+                        double dCenterPointX,
+                        double dCenterPointY);
+    void computeMidArr(double* dArrPosXRotation,
+                       double* dArrPosYRotation,
+                       double* dMidArrX,
+                       double* dMidArrY);
+    void computeMidFace(double* dMidArrX,
+                        double* dMidArrY,
+                        double* dMidFaceXArr,
+                        double* dMidFaceYArr);
+    void computeChildCorners(double* dArrPosXRotation,
+                        double* dArrPosYRotation,
+                        unsigned char ucMapIndex,
+                        double dCenterPointX,
+                        double dCenterPointY,
+                        double* dMidArrX,
+                        double* dMidArrY,
+                        double* dMidFaceXArr,
+                        double* dMidFaceYArr);
+    void findCenterPoint();
+    bool isChildFullyHidden();
 
 protected:
-    //GLOBAL IMAGE DATA REFERENCES
+    /* Global Image Data & References */
     int* m_p_iImageWidth;
     int* m_p_iImageHeight;
     unsigned char* m_p_ucImageData;
     bool* m_p_bPixelFilled;
     GVIndexCube** m_p_GVImageArray;
+    gvLookUpTable* m_pLookupTable;
 
 private:
-    //CHILD IMAGE INFO
+    int m_iHierarchyLevel;
     GVIndexCube** m_p_GVIndexCubeArray;
+    unsigned char m_ucMap;
     unsigned char* m_ucRed;
     unsigned char* m_ucGreen;
     unsigned char* m_ucBlue;
 
-protected:                   //TODO: Verify when everything is done what can be private
-    //CURRENT CUBE DATA
-    unsigned char m_ucMap;
-    int m_iHierarchyLevel;
-    int m_iRenderWidth;
-
-    //ROTATION
-    //MAYBE NOT NECESSARY IN PRIVATE
-    //TODO: Modify: need 8 corner + center  todo: determiner si corner relative to center or absolute
-    int m_iArrPosXRotation[9];      //m_iArrPosXRotation[0] = center absolute ???
-    int m_iArrPosYRotation[9];      //m_iArrPosYRotation[0] = center absolute ???
-    char m_cSortedByDstFromScreen[8];   //index begin at 0
-
+    double m_dChildComputedCornersX[8];
+    double m_dChildComputedCornersY[8];
+    double m_dChildCenterPointX;
+    double m_dChildCenterPointY;
 };
 
 #endif // GVINDEXCUBE_H

@@ -56,3 +56,19 @@ void runTestLookupTable()
 
     cout << "END TESTS" << endl;
 }
+
+void runTestLookupTable(gvLookUpTable* tbl)
+{
+    //TEST LOOK UP TABLE
+    double valuesToTest[15] = {0, PI, 2*PI, 3*PI, 4*PI, 100*PI, 50, 6, 3.26, 59, 2, 15, 7, 9, 56};
+
+    cout << "TEST LOOKUP TABLE" << endl << endl;
+
+    cout << "WANTED         RECEIVED" << endl;
+    for(int i = 0; i < 15; i++)
+    {
+        cout << cos(valuesToTest[i]) << "       " << tbl->getCos(valuesToTest[i]) << endl;
+    }
+
+    cout << "-------------------------------------" << endl;
+}
