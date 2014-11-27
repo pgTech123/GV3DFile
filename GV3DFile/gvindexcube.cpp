@@ -82,17 +82,21 @@ void GVIndexCube::addPixelsCube(unsigned char ucMap, int* ucRed, int* ucGreen, i
     }
 }
 
-void GVIndexCube::addReferenceCube(unsigned char ucMap, GVIndexCube*& p_ChildCubeRef)
+void GVIndexCube::addReferenceCube(unsigned char ucMap, GVIndexCube** p_ChildCubeRef)
 {
     m_ucMap = ucMap;
-    int iReferencesNotEmpty = numberHighBits(m_ucMap);
-    m_p_GVIndexCubeArray = new GVIndexCube*[iReferencesNotEmpty];
+    m_p_GVIndexCubeArray = new GVIndexCube*[8];
 
-    for(int i = 0; i < iReferencesNotEmpty; i++)
+    for(int i = 0; i < 8; i++)
     {
-        m_p_GVIndexCubeArray[i] = &p_ChildCubeRef[i];
+        if((m_ucMap & (0x01 << i)))
+        {
+            m_p_GVIndexCubeArray[i] = *p_ChildCubeRef;
+            m_iHierarchyLevel = m_p_GVIndexCubeArray[i]->getHierarchyLevel() + 1;
+            //cout <<"Test" << m_p_GVIndexCubeArray[i] <<endl;
+        }
     }
-    m_iHierarchyLevel = m_p_GVIndexCubeArray[0]->getHierarchyLevel() + 1;
+    //cout << m_iHierarchyLevel <<  endl;
 }
 
 void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relative
@@ -101,6 +105,7 @@ void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relati
                                             double dCenterPointX,
                                             double dCenterPointY)
 {
+    //cout << "Level : " << m_iHierarchyLevel << endl;
     //TODO: PROTECTION IF ADDRESSES NULL
     if(m_iHierarchyLevel != 0)
     {
@@ -144,7 +149,7 @@ void GVIndexCube::renderReference(double dArrPosXRotation[8],
 
     for(int dst = 0; dst < 8; dst ++)
     {
-        if(isBitHigh(m_ucMap, ucSortedByDstFromScreen[dst]))
+        if((m_ucMap & (0x01 << ucSortedByDstFromScreen[dst])))
         {
             /* Compute child corners */
             computeChildCorners(dArrPosXRotation,
@@ -160,12 +165,13 @@ void GVIndexCube::renderReference(double dArrPosXRotation[8],
             /* Verify if child is suseptible to be written */
             if(!isChildFullyHidden())
             {
+                //cout << m_dChildCenterPointY << endl;
                 /* Rotate and Render Child */
                 m_p_GVIndexCubeArray[ucSortedByDstFromScreen[dst]]->ApplyRotation_and_Render(m_dChildComputedCornersX,
                                                                                              m_dChildComputedCornersY,
-                                                                                             ucSortedByDstFromScreen,/*TODO: verify mathematically that this is correct*/
+                                                                                             ucSortedByDstFromScreen,//TODO: verify mathematically that this is correct
                                                                                              m_dChildCenterPointX,
-                                                                                             m_dChildCenterPointY);
+                                                                                             m_dChildCenterPointY);//*/
             }
         }
     }
@@ -419,12 +425,16 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
     /* Render pixels in order */
     for(int i = 0; i < 8; i++)
     {
+        //cout << " posX: "<<i <<"  "<<iArrPosXRotation[i] << endl;
+        //cout << " posY: "<<i <<"  "<<iArrPosYRotation[i] << endl;
+
         /* If pixel exist */
         if((m_ucMap & (0x01 << i)))
         {
             /* Verify if projected pixel is already written */
             if(iArrPosXRotation[ucSortedByDstFromScreen[i]] < iCenterPointXRounded)
             {
+
                 if(iArrPosYRotation[ucSortedByDstFromScreen[i]] < iCenterPointYRounded)
                 {
                     /* Pixel Position */
@@ -462,6 +472,7 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
             }
             else
             {
+
                 if(iArrPosYRotation[ucSortedByDstFromScreen[i]] < iCenterPointYRounded)
                 {
 

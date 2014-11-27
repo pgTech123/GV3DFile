@@ -49,7 +49,7 @@ public:
 
     /* Add pixel or reference */
     void addPixelsCube(unsigned char ucMap, int* ucRed, int* ucGreen, int* ucBlue);
-    void addReferenceCube(unsigned char ucMap, GVIndexCube*& p_ChildCubeRef);
+    void addReferenceCube(unsigned char ucMap, GVIndexCube** p_ChildCubeRef);
 
     /* Transform and render */
     void ApplyRotation_and_Render(double iArrPosXRotation[8],

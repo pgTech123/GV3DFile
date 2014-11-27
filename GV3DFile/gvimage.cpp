@@ -135,11 +135,11 @@ void GVImage::setUnrotatedCorners()
 
     m_iUnrotatedCornerX[4] = m_iCenterPointX - m_iSideLenght/2;
     m_iUnrotatedCornerY[4] = m_iCenterPointY - m_iSideLenght/2;
-    m_iUnrotatedCornerZ[4] = m_iSideLenght/2;
+    m_iUnrotatedCornerZ[4] = (m_iSideLenght/2);
 
     m_iUnrotatedCornerX[5] = m_iCenterPointX + m_iSideLenght/2;
     m_iUnrotatedCornerY[5] = m_iCenterPointY - m_iSideLenght/2;
-    m_iUnrotatedCornerZ[5] = m_iSideLenght/2;
+    m_iUnrotatedCornerZ[5] = (m_iSideLenght/2);
 
     m_iUnrotatedCornerX[6] = m_iCenterPointX + m_iSideLenght/2;
     m_iUnrotatedCornerY[6] = m_iCenterPointY - m_iSideLenght/2;
@@ -264,10 +264,11 @@ int GVImage::readIndexCubes(fstream *file)
 
             /* Set cube with child addresses */
             if(m_iNumberOfLevels == level+1){
-                this->addReferenceCube(ucMap, m_p_GVImageArray[iAddressCubesCursorOffset]);
+                this->addReferenceCube(ucMap, &m_p_GVImageArray[iAddressCubesCursorOffset]);
+                //cout <<  m_p_GVImageArray[iAddressCubesCursorOffset] << endl;
             }
             else{
-                m_p_GVImageArray[iCubeBeingWritten]->addReferenceCube(ucMap,m_p_GVImageArray[iAddressCubesCursorOffset]);
+                m_p_GVImageArray[iCubeBeingWritten]->addReferenceCube(ucMap, &m_p_GVImageArray[iAddressCubesCursorOffset]);
             }
 
             /* Update Offset */
@@ -333,6 +334,8 @@ void GVImage::generateImage()
     /* Compute cube corners projected on the frame */
     for(int i = 0; i < 8; i++)
     {
+       // cout << "PosX: " << i << "  " << m_iUnrotatedCornerX[i] << endl;
+       // cout << "PosY: " << i << "  " << m_iUnrotatedCornerY[i] << endl;
         m_dScreenRotatedCornerX[i] = computePosXOnScreen(m_iUnrotatedCornerX[i],
                                                          m_iUnrotatedCornerY[i],
                                                          m_iUnrotatedCornerZ[i],
