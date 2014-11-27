@@ -1,0 +1,41 @@
+I3C File Structure
+==================
+
+Organisation:
+=============
+	TODO
+
+Components:
+===========
+	Maps:
+	TODO
+
+
+File structure:
+===============
+/Width of one side of the cube\
+
+/Number of Maps at Level 1 (also the number of cubes at level 1)\
+/Number of Maps at Level 2 (also the number of cubes at level 2)\
+/Number of Maps at Level 3 (also the number of cubes at level 3)\
+/ ... \
+
+/Map of the 1 cube level 1\
+/Map of the 2 cube level 1\
+/Map of the 3 cube level 1\
+/ ... \
+
+/Value RGB of the 1 pixel present in the 1 cube\
+[Values are ordered]
+/Value RGB of the n pixel present in the m cube\
+/ ... \
+
+/Map of the 1 cube level 2\
+/Map of the 2 cube level 2\
+/Map of the 3 cube level 2\
+/ ... \
+
+/Map of the 1 cube level 3\
+/Map of the 2 cube level 3\
+/Map of the 3 cube level 3\
+/ ... \
