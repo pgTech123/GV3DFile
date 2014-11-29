@@ -17,12 +17,7 @@ int firstHighBit(int iNumber);
 bool isBitHigh(unsigned char iNumber, unsigned char iBit);
 
 
-double computeRotationX(int iX, int iZ, double dRPhi);
-double computeRotationY(int iX, int iY, int iZ, double dRTetha, double dRPhi);
-double computeRotationZ(int iX, int iY, int iZ, double dRTetha, double dRPhi);
 
-double computePosXOnScreen(int iX, int iY, int iZ, double dRTetha, double dRPhi);
-double computePosYOnScreen(int iX, int iY, int iZ, double dRTetha, double dRPhi);
 
 void sort(double dUnsortedArray[8], unsigned char uc_IndexSorted[8]);
 

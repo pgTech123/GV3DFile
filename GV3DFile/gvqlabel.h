@@ -51,6 +51,10 @@ private:
 
     /* 3D Image */
     GVImage *GV;
+
+    /* TEST ANGLE */
+    double angleTheta;
+    double anglePhi;
 };
 
 #endif // GVQLABEL_H

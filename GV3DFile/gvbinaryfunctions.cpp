@@ -71,31 +71,6 @@ bool isBitHigh(unsigned char ucNumber, unsigned char ucBit)
 
 }
 
-double computeRotationX(int iX, int iZ, double dRPhi)
-{
-    return iX;//iX*cos(dRPhi) + iZ*sin(dRPhi);
-}
-
-double computeRotationY(int iX, int iY, int iZ, double dRTetha, double dRPhi)
-{
-    return iY;//iX *sin(dRTetha)*sin(dRPhi) + iY*cos(dRTetha) - iZ*sin(dRTetha)*cos(dRPhi);
-}
-
-double computeRotationZ(int iX, int iY, int iZ, double dRTetha, double dRPhi)
-{
-    return 1;//(-iX)*cos(dRTetha)*sin(dRPhi) - iY*sin(dRTetha) + iZ*cos(dRTetha)*cos(dRPhi);
-}
-
-double computePosXOnScreen(int iX, int iY, int iZ, double dRTetha, double dRPhi)
-{
-    return computeRotationX(iX, iZ, dRPhi)/computeRotationZ(iX, iY, iZ, dRTetha, dRPhi);
-}
-
-double computePosYOnScreen(int iX, int iY, int iZ, double dRTetha, double dRPhi)
-{
-    return computeRotationY(iX, iY, iZ, dRTetha, dRPhi)/computeRotationZ(iX, iY, iZ, dRTetha, dRPhi);
-}
-
 void sort(double dUnsortedArray[8], unsigned char uc_IndexSorted[8])
 {
     //To optimize (TODO)

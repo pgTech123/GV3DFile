@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <fstream>
 #include "gvindexcube.h"
+#include "gvtransform.h"
 
 /* RGB Image */
 #define NUMBER_OF_CHANNELS      3
@@ -63,7 +64,6 @@ private:
     int verifyImageSideLenght(int iSideLenght);
     void setImageProperties();
     void setImageCenterPoint();
-    void setUnrotatedCorners();
     void setNumberOfLevels();
 
     void readNumOfMaps(fstream *file);
@@ -74,6 +74,8 @@ private:
 
 private:
     bool m_bImageStored;
+
+    GVTransform transform;
 
     /* Cube Rotation */
     double m_dTheta;
@@ -87,11 +89,6 @@ private:
 
     int m_iCenterPointX;
     int m_iCenterPointY;
-
-
-    int m_iUnrotatedCornerX[8];     /* Constant for the duration of the execution */
-    int m_iUnrotatedCornerY[8];     /* Constant for the duration of the execution */
-    int m_iUnrotatedCornerZ[8];     /* Constant for the duration of the execution */
 
     double m_dScreenRotatedCornerX[8];
     double m_dScreenRotatedCornerY[8];

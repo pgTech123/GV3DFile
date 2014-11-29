@@ -70,7 +70,7 @@ int GVImage::readImageFile(fstream *file)
     /* Preparing to Read Image*/
     setImageProperties();
     setImageCenterPoint();
-    setUnrotatedCorners();
+    transform.setUnrotatedCornersCorners(m_iCenterPointX, m_iCenterPointY, m_iSideLenght);
     setNumberOfLevels();
 
     /* Read Data */
@@ -113,41 +113,6 @@ void GVImage::setImageCenterPoint()
 {
     m_iCenterPointX = (*m_p_iImageWidth)/2;
     m_iCenterPointY = (*m_p_iImageHeight)/2;
-}
-
-void GVImage::setUnrotatedCorners()
-{
-    m_iUnrotatedCornerX[0] = m_iCenterPointX - m_iSideLenght/2;
-    m_iUnrotatedCornerY[0] = m_iCenterPointY + m_iSideLenght/2;
-    m_iUnrotatedCornerZ[0] = m_iSideLenght/2;
-
-    m_iUnrotatedCornerX[1] = m_iCenterPointX + m_iSideLenght/2;
-    m_iUnrotatedCornerY[1] = m_iCenterPointY + m_iSideLenght/2;
-    m_iUnrotatedCornerZ[1] = m_iSideLenght/2;
-
-    m_iUnrotatedCornerX[2] = m_iCenterPointX + m_iSideLenght/2;
-    m_iUnrotatedCornerY[2] = m_iCenterPointY + m_iSideLenght/2;
-    m_iUnrotatedCornerZ[2] = -1*(m_iSideLenght/2);
-
-    m_iUnrotatedCornerX[3] = m_iCenterPointX - m_iSideLenght/2;
-    m_iUnrotatedCornerY[3] = m_iCenterPointY + m_iSideLenght/2;
-    m_iUnrotatedCornerZ[3] = -1*(m_iSideLenght/2);
-
-    m_iUnrotatedCornerX[4] = m_iCenterPointX - m_iSideLenght/2;
-    m_iUnrotatedCornerY[4] = m_iCenterPointY - m_iSideLenght/2;
-    m_iUnrotatedCornerZ[4] = (m_iSideLenght/2);
-
-    m_iUnrotatedCornerX[5] = m_iCenterPointX + m_iSideLenght/2;
-    m_iUnrotatedCornerY[5] = m_iCenterPointY - m_iSideLenght/2;
-    m_iUnrotatedCornerZ[5] = (m_iSideLenght/2);
-
-    m_iUnrotatedCornerX[6] = m_iCenterPointX + m_iSideLenght/2;
-    m_iUnrotatedCornerY[6] = m_iCenterPointY - m_iSideLenght/2;
-    m_iUnrotatedCornerZ[6] = -1*(m_iSideLenght/2);
-
-    m_iUnrotatedCornerX[7] = m_iCenterPointX - m_iSideLenght/2;
-    m_iUnrotatedCornerY[7] = m_iCenterPointY - m_iSideLenght/2;
-    m_iUnrotatedCornerZ[7] = -1*(m_iSideLenght/2);
 }
 
 void GVImage::setNumberOfLevels()
@@ -265,7 +230,6 @@ int GVImage::readIndexCubes(fstream *file)
             /* Set cube with child addresses */
             if(m_iNumberOfLevels == level+1){
                 this->addReferenceCube(ucMap, &m_p_GVImageArray[iAddressCubesCursorOffset]);
-                //cout <<  m_p_GVImageArray[iAddressCubesCursorOffset] << endl;
             }
             else{
                 m_p_GVImageArray[iCubeBeingWritten]->addReferenceCube(ucMap, &m_p_GVImageArray[iAddressCubesCursorOffset]);
@@ -334,23 +298,12 @@ void GVImage::generateImage()
     /* Compute cube corners projected on the frame */
     for(int i = 0; i < 8; i++)
     {
-       // cout << "PosX: " << i << "  " << m_iUnrotatedCornerX[i] << endl;
-       // cout << "PosY: " << i << "  " << m_iUnrotatedCornerY[i] << endl;
-        m_dScreenRotatedCornerX[i] = computePosXOnScreen(m_iUnrotatedCornerX[i],
-                                                         m_iUnrotatedCornerY[i],
-                                                         m_iUnrotatedCornerZ[i],
-                                                         m_dTheta,
-                                                         m_dPhi);
-        m_dScreenRotatedCornerY[i] = computePosYOnScreen(m_iUnrotatedCornerX[i],
-                                                         m_iUnrotatedCornerY[i],
-                                                         m_iUnrotatedCornerZ[i],
-                                                         m_dTheta,
-                                                         m_dPhi);
-        m_dDstFromScreenRotated[i] = -1 * computeRotationZ(m_iUnrotatedCornerX[i],  //To respect axis
-                                                      m_iUnrotatedCornerY[i],
-                                                      m_iUnrotatedCornerZ[i],
-                                                      m_dTheta,
-                                                      m_dPhi);
+        // cout << "PosX: " << i << "  " << m_iUnrotatedCornerX[i] << endl;
+        // cout << "PosY: " << i << "  " << m_iUnrotatedCornerY[i] << endl;
+        transform.setAngles(m_dTheta, m_dPhi);
+        transform.computePosXOnScreen(m_dScreenRotatedCornerX);
+        transform.computePosYOnScreen(m_dScreenRotatedCornerY);
+        transform.computeRotationZ(m_dDstFromScreenRotated);
     }
 
     /* Sort points on Z axis by distance */

@@ -14,6 +14,10 @@ GVQLabel::GVQLabel()
 {
     /* The Default Image Loaded is at that Location */
     initializeRenderingWidget("./image_test.i3c");
+
+    /* TO REMOVE */
+    angleTheta = 0;
+    anglePhi = 0;
 }
 
 GVQLabel::GVQLabel(const char* p_cPath)
@@ -47,8 +51,9 @@ void GVQLabel::initializeRenderingWidget(const char* p_cPath)
 
 void GVQLabel::refreshScreen()
 {
+    angleTheta += 0.1;
     /* Image Preparation and Rendering */
-    GV->setRotation(0, 0);
+    GV->setRotation(angleTheta, anglePhi);
     GV->generateImage();
 
     /* Fit Pixel Map for the Window Resolution */

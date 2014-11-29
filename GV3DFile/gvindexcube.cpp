@@ -86,13 +86,15 @@ void GVIndexCube::addReferenceCube(unsigned char ucMap, GVIndexCube** p_ChildCub
 {
     m_ucMap = ucMap;
     m_p_GVIndexCubeArray = new GVIndexCube*[8];
+    int counter = 0;
 
     for(int i = 0; i < 8; i++)
     {
         if((m_ucMap & (0x01 << i)))
         {
-            m_p_GVIndexCubeArray[i] = *p_ChildCubeRef;
+            m_p_GVIndexCubeArray[i] = *(p_ChildCubeRef+counter);
             m_iHierarchyLevel = m_p_GVIndexCubeArray[i]->getHierarchyLevel() + 1;
+            counter++;
             //cout <<"Test" << m_p_GVIndexCubeArray[i] <<endl;
         }
     }
