@@ -3,6 +3,12 @@
 
 #include <math.h>
 
+
+#include <iostream>
+using namespace std;
+
+#define PI  3.14159265359
+
 class GVTransform
 {
 public:
@@ -13,9 +19,7 @@ public:
     void setAngles(double dTheta, double dPhi);
 
     /* Computing */
-    void computePosXOnScreen(double* dScreenRotatedCornerX);
-    void computePosYOnScreen(double* dScreenRotatedCornerY);
-    void computeRotationZ(double* dRotatedCornerZ);
+    void computeRotation(double* dScreenRotatedCornerX, double* dScreenRotatedCornerY, double* dRotatedCornerZ);
 
 private:
     void computeSinAndCos();

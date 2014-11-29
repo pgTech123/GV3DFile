@@ -301,9 +301,7 @@ void GVImage::generateImage()
         // cout << "PosX: " << i << "  " << m_iUnrotatedCornerX[i] << endl;
         // cout << "PosY: " << i << "  " << m_iUnrotatedCornerY[i] << endl;
         transform.setAngles(m_dTheta, m_dPhi);
-        transform.computePosXOnScreen(m_dScreenRotatedCornerX);
-        transform.computePosYOnScreen(m_dScreenRotatedCornerY);
-        transform.computeRotationZ(m_dDstFromScreenRotated);
+        transform.computeRotation(m_dScreenRotatedCornerX, m_dScreenRotatedCornerY, m_dDstFromScreenRotated);
     }
 
     /* Sort points on Z axis by distance */

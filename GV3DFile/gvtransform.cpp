@@ -17,7 +17,7 @@ void GVTransform::setUnrotatedCornersCorners(int iCenterPointX, int iCenterPoint
     m_iCenterPointX = iCenterPointX;
     m_iCenterPointY = iCenterPointY;
 
-    m_iUnrotatedCornerX[0] = - iSideLenght/2;
+    m_iUnrotatedCornerX[0] = -iSideLenght/2;
     m_iUnrotatedCornerY[0] = iSideLenght/2;
     m_iUnrotatedCornerZ[0] = iSideLenght/2;
 
@@ -50,33 +50,21 @@ void GVTransform::setUnrotatedCornersCorners(int iCenterPointX, int iCenterPoint
     m_iUnrotatedCornerZ[7] = -1*(iSideLenght/2);
 }
 
-void GVTransform::computePosXOnScreen(double* dScreenRotatedCornerX)
+void GVTransform::computeRotation(double *dScreenRotatedCornerX, double *dScreenRotatedCornerY, double *dRotatedCornerZ)
 {
     for(int i = 0; i < 8; i++)
     {
-        dScreenRotatedCornerX[i] = (m_iUnrotatedCornerX[i] * m_dCosTheta)+
-                                   (m_iUnrotatedCornerZ[i] * m_dSinTheta) +
+        dScreenRotatedCornerX[i] = (m_iUnrotatedCornerX[i] * m_dCosTheta) +
                                    m_iCenterPointX;
-    }
-}
 
-void GVTransform::computePosYOnScreen(double* dScreenRotatedCornerY)
-{
-    for(int i = 0; i < 8; i++)
-    {
-        dScreenRotatedCornerY[i] = m_iUnrotatedCornerY[i] + m_iCenterPointY;
-    }
-}
+        dScreenRotatedCornerY[i] = (m_iUnrotatedCornerY[i]*m_dCosPhi) +
+                                   m_iCenterPointY;
 
-void GVTransform::computeRotationZ(double* dRotatedCornerZ)
-{
-    for(int i = 0; i < 8; i++)
-    {
         /*******************************************************
          * "-1" to respect axis (-1 = far, 1 = close) so must be
          * inverted for sorting
          ******************************************************/
-        dRotatedCornerZ[i] = -m_iUnrotatedCornerZ[i];
+        dRotatedCornerZ[i] = -m_iUnrotatedCornerZ[i]*m_dSinTheta*m_dSinPhi;
     }
 }
 
@@ -84,9 +72,9 @@ void GVTransform::computeSinAndCos()
 {
     /*Precompute value of sin and cos*/
     m_dCosTheta = cos(m_dTheta);
-    m_dSinTheta = sin(m_dTheta);
+    m_dSinTheta = sin(m_dTheta+PI/2);
     m_dCosPhi = cos(m_dPhi);
-    m_dSinPhi = sin(m_dPhi);
+    m_dSinPhi = sin(m_dPhi+PI/2);
 }
 
 /*

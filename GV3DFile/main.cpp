@@ -36,7 +36,7 @@
 #define APPLICATION_NAME    "GV3DFile"
 
 /* 3D Image Path */
-#define FILE_PATH           "./../Test2Cubes.i3c"
+#define FILE_PATH           "./../TestSquare3D.i3c"
 
 
 int main(int argc, char *argv[])
