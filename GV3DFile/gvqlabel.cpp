@@ -51,7 +51,8 @@ void GVQLabel::initializeRenderingWidget(const char* p_cPath)
 
 void GVQLabel::refreshScreen()
 {
-    angleTheta += 0.1;
+    anglePhi += 0.1;
+
     /* Image Preparation and Rendering */
     GV->setRotation(angleTheta, anglePhi);
     GV->generateImage();
