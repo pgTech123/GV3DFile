@@ -66,6 +66,7 @@ private:
     void setImageCenterPoint();
     void setNumberOfLevels();
 
+    /* File reading functions */
     void readNumOfMaps(fstream *file);
     int readCubes(fstream *file);
     int readPixelCubes(fstream *file);
@@ -73,13 +74,14 @@ private:
     int readMap(fstream *file, unsigned char* ucMap, int* iNumOfPix);
 
 private:
-    bool m_bImageStored;
+    /* Object status(image stored or not) */
+    bool m_bImageStored;    //TODO: Put a better name for this variable
 
-    GVTransform transform;
-
-    /* Cube Rotation */
+    /* Cube Transformations */
     double m_dTheta;
     double m_dPhi;
+    GVTransform transform;
+
 
     int m_iSideLenght;
     int m_iNumberOfLevels;  //1 to n, where 1 => pixel level

@@ -21,7 +21,9 @@ GVIndexCube::GVIndexCube(int* p_iImageWidth, int* p_iImageHeight, unsigned char*
                          bool* p_bPixelFilled, GVIndexCube** p_GVImageArray, gvLookUpTable*& lookupTable)
 {
     m_pLookupTable = lookupTable;
-    initializeCube();
+
+    /* Preset everithing to 0 then try to charge specified data */
+    initializeCube();    //TODO: Catch possible error
     setImageProperty(p_iImageWidth, p_iImageHeight, p_ucImageData, p_bPixelFilled);
     setGVIndexStorageReference(p_GVImageArray);
 }
@@ -37,8 +39,7 @@ void GVIndexCube::initializeCube()
 bool GVIndexCube::setImageProperty(int* p_iImageWidth, int* p_iImageHeight,
                                    unsigned char* p_ucImageData,  bool* p_bPixelFilled)
 {
-    if(*p_iImageWidth != 0 && *p_iImageHeight != 0 && p_ucImageData != NULL && p_bPixelFilled != NULL)
-    {
+    if(*p_iImageWidth != 0 && *p_iImageHeight != 0 && p_ucImageData != NULL && p_bPixelFilled != NULL){
         m_p_iImageWidth = p_iImageWidth;
         m_p_iImageHeight = p_iImageHeight;
         m_p_ucImageData = p_ucImageData;
@@ -46,8 +47,7 @@ bool GVIndexCube::setImageProperty(int* p_iImageWidth, int* p_iImageHeight,
 
         return true;
     }
-    else
-    {
+    else{
         return false;
     }
 }
@@ -67,15 +67,15 @@ void GVIndexCube::addPixelsCube(unsigned char ucMap, int* ucRed, int* ucGreen, i
     m_ucMap = ucMap;
     m_iHierarchyLevel = 0;
 
-    //FILL PIXELS ACCORDING TO MAP
+    /* Create storage according to the map */
     int iPixelsNotEmpty = numberHighBits(m_ucMap);
     m_ucRed = new unsigned char[iPixelsNotEmpty];
     m_ucGreen = new unsigned char[iPixelsNotEmpty];
     m_ucBlue = new unsigned char[iPixelsNotEmpty];
 
+    /* Set the value for each specified pixel */
     for(int i = 0; i < iPixelsNotEmpty; i++)
     {
-        //ADD PIXEL
         m_ucRed[i] = (unsigned char)ucRed[i];
         m_ucGreen[i] = (unsigned char)ucGreen[i];
         m_ucBlue[i] = (unsigned char)ucBlue[i];
@@ -84,21 +84,19 @@ void GVIndexCube::addPixelsCube(unsigned char ucMap, int* ucRed, int* ucGreen, i
 
 void GVIndexCube::addReferenceCube(unsigned char ucMap, GVIndexCube** p_ChildCubeRef)
 {
-    m_ucMap = ucMap;
-    m_p_GVIndexCubeArray = new GVIndexCube*[8];
-    int counter = 0;
+    /* Set hierarchy level */
+    m_iHierarchyLevel = p_ChildCubeRef[0]->getHierarchyLevel() + 1;
 
-    for(int i = 0; i < 8; i++)
+    /* Create storage according to the map */
+    m_ucMap = ucMap;
+    int iReferencesNotEmpty = numberHighBits(m_ucMap);
+    m_p_GVIndexCubeArray = new GVIndexCube*[iReferencesNotEmpty];
+
+    /* Set the reference for each specified child cube */
+    for(int i = 0; i < iReferencesNotEmpty; i++)
     {
-        if((m_ucMap & (0x01 << i)))
-        {
-            m_p_GVIndexCubeArray[i] = *(p_ChildCubeRef+counter);
-            m_iHierarchyLevel = m_p_GVIndexCubeArray[i]->getHierarchyLevel() + 1;
-            counter++;
-            //cout <<"Test" << m_p_GVIndexCubeArray[i] <<endl;
-        }
+        m_p_GVIndexCubeArray[i] = (GVIndexCube*)p_ChildCubeRef[i];
     }
-    //cout << m_iHierarchyLevel <<  endl;
 }
 
 void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relative
@@ -107,18 +105,15 @@ void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relati
                                             double dCenterPointX,
                                             double dCenterPointY)
 {
-    //cout << "Level : " << m_iHierarchyLevel << endl;
-    //TODO: PROTECTION IF ADDRESSES NULL
-    if(m_iHierarchyLevel != 0)
-    {
+    /* Render cubes accordingly to their level */
+    if(m_iHierarchyLevel > 0){
         renderReference(iArrPosXRotation,
                     iArrPosYRotation,
                     ucSortedByDstFromScreen,
                     dCenterPointX,
                     dCenterPointY);
     }
-    else
-    {
+    else{
         renderPixel(iArrPosXRotation,
                     iArrPosYRotation,
                     ucSortedByDstFromScreen,
@@ -154,6 +149,7 @@ void GVIndexCube::renderReference(double dArrPosXRotation[8],
         if((m_ucMap & (0x01 << ucSortedByDstFromScreen[dst])))
         {
             /* Compute child corners */
+            // TODO: !!!Problem potentially here!!!
             computeChildCorners(dArrPosXRotation,
                            dArrPosYRotation,
                            ucSortedByDstFromScreen[dst],
@@ -167,7 +163,6 @@ void GVIndexCube::renderReference(double dArrPosXRotation[8],
             /* Verify if child is suseptible to be written */
             if(!isChildFullyHidden())
             {
-                //cout << m_dChildCenterPointY << endl;
                 /* Rotate and Render Child */
                 m_p_GVIndexCubeArray[ucSortedByDstFromScreen[dst]]->ApplyRotation_and_Render(m_dChildComputedCornersX,
                                                                                              m_dChildComputedCornersY,
@@ -427,6 +422,7 @@ bool GVIndexCube::isChildFullyHidden()
 {
     /*Scan to see if any pixel in the region defined by m_dChildComputedCornersX
      * and m_dChildComputedCornersY is not written*/
+    //TODO
     return false;
 }
 
@@ -436,7 +432,7 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
                     double dCenterPointX,
                     double dCenterPointY)
 {
-    /* Roundd center point */
+    /* Round center point */
     int iCenterPointXRounded = (int)round(dCenterPointX);
     int iCenterPointYRounded = (int)round(dCenterPointY);
 
@@ -445,6 +441,7 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
     /* Render pixels in order */
     for(int i = 0; i < 8; i++)
     {
+        /* Debug */
         //cout << " posX: "<<i <<"  "<<iArrPosXRotation[i] << endl;
         //cout << " posY: "<<i <<"  "<<iArrPosYRotation[i] << endl;
 

@@ -229,10 +229,19 @@ int GVImage::readIndexCubes(fstream *file)
 
             /* Set cube with child addresses */
             if(m_iNumberOfLevels == level+1){
+                //cout << "Master Cube" << endl;
                 this->addReferenceCube(ucMap, &m_p_GVImageArray[iAddressCubesCursorOffset]);
             }
             else{
-                m_p_GVImageArray[iCubeBeingWritten]->addReferenceCube(ucMap, &m_p_GVImageArray[iAddressCubesCursorOffset]);
+                m_p_GVImageArray[iCubeBeingWritten] = new GVIndexCube(&*m_p_iImageWidth,
+                                                                          &*m_p_iImageHeight,
+                                                                          &*m_p_ucImageData,
+                                                                          &*m_p_bPixelFilled,
+                                                                          &m_p_GVImageArray[0],
+                                                                          m_pLookupTable);
+
+                m_p_GVImageArray[iCubeBeingWritten]->addReferenceCube(ucMap,
+                                                                      &m_p_GVImageArray[iAddressCubesCursorOffset]);
             }
 
             /* Update Offset */

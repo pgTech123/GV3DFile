@@ -21,9 +21,9 @@ using namespace std;
 /*************************************************************************
  * GVIndexCube Class:
  *
- * The purpose of this class is to represent a group of 8 or less storage
- * space. These spaces can be filled by pixels values or by references to
- * another GVIndexCube(child). This is the lowest building bloc of 3D images.
+ * The purpose of this class is to represent a group of 8 storage space.
+ * These spaces can be filled by pixels values or by references to another
+ * GVIndexCube(child). This is the smallest building bloc of 3D images.
  *************************************************************************/
 
 class GVIndexCube
@@ -91,22 +91,31 @@ private:
     bool isChildFullyHidden();
 
 protected:
-    /* Global Image Data & References */
+    /********************************************************************
+     * Global Image Data & References
+     * (Initialized once for an image and pointer set in all child cubes)
+     ********************************************************************/
     int* m_p_iImageWidth;
     int* m_p_iImageHeight;
     unsigned char* m_p_ucImageData;
     bool* m_p_bPixelFilled;
     GVIndexCube** m_p_GVImageArray;
-    gvLookUpTable* m_pLookupTable;
+    gvLookUpTable* m_pLookupTable;  //Not used yet
 
 private:
+    /* Cube info */
     int m_iHierarchyLevel;
-    GVIndexCube** m_p_GVIndexCubeArray;
     unsigned char m_ucMap;
+
+    /* Pixel level cube */
     unsigned char* m_ucRed;
     unsigned char* m_ucGreen;
     unsigned char* m_ucBlue;
 
+    /* Reference cube */
+    GVIndexCube** m_p_GVIndexCubeArray;
+
+    /* Reference cube rendering */
     double m_dChildComputedCornersX[8];
     double m_dChildComputedCornersY[8];
     double m_dChildCenterPointX;
