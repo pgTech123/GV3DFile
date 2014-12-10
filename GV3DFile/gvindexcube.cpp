@@ -66,19 +66,23 @@ void GVIndexCube::addPixelsCube(unsigned char ucMap, int* ucRed, int* ucGreen, i
 {
     m_ucMap = ucMap;
     m_iHierarchyLevel = 0;
+    int i_Counter = 0;
 
     /* Create storage according to the map */
-    int iPixelsNotEmpty = numberHighBits(m_ucMap);
-    m_ucRed = new unsigned char[iPixelsNotEmpty];
-    m_ucGreen = new unsigned char[iPixelsNotEmpty];
-    m_ucBlue = new unsigned char[iPixelsNotEmpty];
+   // int iPixelsNotEmpty = numberHighBits(m_ucMap);
+    m_ucRed = new unsigned char[8];
+    m_ucGreen = new unsigned char[8];
+    m_ucBlue = new unsigned char[8];
 
     /* Set the value for each specified pixel */
-    for(int i = 0; i < iPixelsNotEmpty; i++)
+    for(int i = 0; i < 8; i++)
     {
-        m_ucRed[i] = (unsigned char)ucRed[i];
-        m_ucGreen[i] = (unsigned char)ucGreen[i];
-        m_ucBlue[i] = (unsigned char)ucBlue[i];
+        if(m_ucMap & (0x01 << i)){
+            m_ucRed[i] = (unsigned char)ucRed[i_Counter];
+            m_ucGreen[i] = (unsigned char)ucGreen[i_Counter];
+            m_ucBlue[i] = (unsigned char)ucBlue[i_Counter];
+            i_Counter++;
+        }
     }
 }
 
@@ -90,12 +94,16 @@ void GVIndexCube::addReferenceCube(unsigned char ucMap, GVIndexCube** p_ChildCub
     /* Create storage according to the map */
     m_ucMap = ucMap;
     int iReferencesNotEmpty = numberHighBits(m_ucMap);
-    m_p_GVIndexCubeArray = new GVIndexCube*[iReferencesNotEmpty];
+    m_p_GVIndexCubeArray = new GVIndexCube*[8];
 
     /* Set the reference for each specified child cube */
-    for(int i = 0; i < iReferencesNotEmpty; i++)
+    int i_Counter = 0;
+    for(int i = 0; i < 8; i++)
     {
-        m_p_GVIndexCubeArray[i] = (GVIndexCube*)p_ChildCubeRef[i];
+        if(m_ucMap & (0x01 << i)){
+            m_p_GVIndexCubeArray[i] = (GVIndexCube*)p_ChildCubeRef[i_Counter];
+            i_Counter++;
+        }
     }
 }
 
@@ -418,7 +426,7 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
     int iCenterPointXRounded = (int)round(dCenterPointX);
     int iCenterPointYRounded = (int)round(dCenterPointY);
 
-    unsigned char ucIndexPixel = 0;
+    //unsigned char ucIndexPixel = 0;
 
     /* Render pixels in order */
     for(int i = 0; i < 8; i++)
@@ -445,9 +453,9 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
                     if(!m_p_bPixelFilled[(iCenterPointXRounded-1)+((iCenterPointYRounded-1)*(*m_p_iImageWidth))])
                     {
                         /* Write pixel */
-                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3] = m_ucRed[ucIndexPixel];
-                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucIndexPixel];
-                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucIndexPixel];
+                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3] = m_ucRed[ucSortedByDstFromScreen[i]];
+                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucSortedByDstFromScreen[i]];
+                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucSortedByDstFromScreen[i]];
                         m_p_bPixelFilled[(iCenterPointXRounded-1)+((iCenterPointYRounded-1)*(*m_p_iImageWidth))] = true;
                     }
                 }
@@ -463,9 +471,9 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
                     if(!m_p_bPixelFilled[(iCenterPointXRounded-1)+((iCenterPointYRounded)*(*m_p_iImageWidth))])
                     {
                         /* Write pixel */
-                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded)*(*m_p_iImageWidth))*3] = m_ucRed[ucIndexPixel];
-                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucIndexPixel];
-                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucIndexPixel];
+                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded)*(*m_p_iImageWidth))*3] = m_ucRed[ucSortedByDstFromScreen[i]];
+                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucSortedByDstFromScreen[i]];
+                        m_p_ucImageData[(iCenterPointXRounded-1+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucSortedByDstFromScreen[i]];
                         m_p_bPixelFilled[(iCenterPointXRounded-1)+((iCenterPointYRounded)*(*m_p_iImageWidth))] = true;
                     }
                 }
@@ -486,9 +494,9 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
                     if(!m_p_bPixelFilled[(iCenterPointXRounded)+((iCenterPointYRounded-1)*(*m_p_iImageWidth))])
                     {
                         /* Write pixel */
-                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3] = m_ucRed[ucIndexPixel];
-                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucIndexPixel];
-                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucIndexPixel];
+                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3] = m_ucRed[ucSortedByDstFromScreen[i]];
+                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucSortedByDstFromScreen[i]];
+                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded-1)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucSortedByDstFromScreen[i]];
                         m_p_bPixelFilled[(iCenterPointXRounded)+((iCenterPointYRounded-1)*(*m_p_iImageWidth))] = true;
                     }
                 }
@@ -504,14 +512,14 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
                     if(!m_p_bPixelFilled[(iCenterPointXRounded)+((iCenterPointYRounded)*(*m_p_iImageWidth))])
                     {
                         /* Write pixel */
-                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3] = m_ucRed[ucIndexPixel];
-                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucIndexPixel];
-                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucIndexPixel];
+                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3] = m_ucRed[ucSortedByDstFromScreen[i]];
+                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+1] = m_ucGreen[ucSortedByDstFromScreen[i]];
+                        m_p_ucImageData[(iCenterPointXRounded+(iCenterPointYRounded)*(*m_p_iImageWidth))*3+2] = m_ucBlue[ucSortedByDstFromScreen[i]];
                         m_p_bPixelFilled[(iCenterPointXRounded)+((iCenterPointYRounded)*(*m_p_iImageWidth))] = true;
                     }
                 }
             }
-            ucIndexPixel++;
+            //ucIndexPixel++;
         }
     }
 }

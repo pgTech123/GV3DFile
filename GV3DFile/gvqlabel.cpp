@@ -17,7 +17,7 @@ GVQLabel::GVQLabel()
 
     /* TO REMOVE */
     angleTheta = 0;
-    anglePhi = 0;
+    anglePhi = PI/2;
 }
 
 GVQLabel::GVQLabel(const char* p_cPath)
