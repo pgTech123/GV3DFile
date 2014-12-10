@@ -48,17 +48,26 @@ void GVTransform::setUnrotatedCornersCorners(int iCenterPointX, int iCenterPoint
     m_iUnrotatedCornerX[7] = -iSideLenght/2;
     m_iUnrotatedCornerY[7] = -iSideLenght/2;
     m_iUnrotatedCornerZ[7] = -1*(iSideLenght/2);
+
+
+    dstFromMiddle2Corner = sqrt((iSideLenght/2)*(iSideLenght/2)*3);
 }
 
 void GVTransform::computeRotation(double *dScreenRotatedCornerX, double *dScreenRotatedCornerY, double *dRotatedCornerZ)
 {
     for(int i = 0; i < 8; i++)
     {
-        dScreenRotatedCornerX[i] = (m_iUnrotatedCornerX[i] * m_dCosTheta) +
+        dScreenRotatedCornerX[i] = (dstFromMiddle2Corner * cos(m_dTheta+(i*PI/2))) +
                                    m_iCenterPointX;
 
-        dScreenRotatedCornerY[i] = (m_iUnrotatedCornerY[i]*m_dCosPhi) +
-                                   m_iCenterPointY;
+        if(i%2 == 0){
+            dScreenRotatedCornerY[i] = (m_iUnrotatedCornerY[i]*cos(m_dPhi+(i*PI/2))) +
+                                        m_iCenterPointY;
+        }
+        else{
+            dScreenRotatedCornerY[i] = (m_iUnrotatedCornerY[i]*cos(m_dPhi+((i-1)*PI/2))) +
+                                        m_iCenterPointY;
+        }
 
         /*******************************************************
          * "-1" to respect axis (-1 = far, 1 = close) so must be

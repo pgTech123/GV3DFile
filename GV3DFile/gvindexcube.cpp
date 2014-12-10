@@ -426,8 +426,6 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
     int iCenterPointXRounded = (int)round(dCenterPointX);
     int iCenterPointYRounded = (int)round(dCenterPointY);
 
-    //unsigned char ucIndexPixel = 0;
-
     /* Render pixels in order */
     for(int i = 0; i < 8; i++)
     {
@@ -519,7 +517,6 @@ void GVIndexCube::renderPixel(double iArrPosXRotation[8],
                     }
                 }
             }
-            //ucIndexPixel++;
         }
     }
 }

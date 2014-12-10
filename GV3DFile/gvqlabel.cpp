@@ -16,7 +16,7 @@ GVQLabel::GVQLabel()
     initializeRenderingWidget("./image_test.i3c");
 
     /* TO REMOVE */
-    angleTheta = 0;
+    angleTheta = PI/2;
     anglePhi = PI/2;
 }
 

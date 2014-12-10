@@ -40,6 +40,9 @@ private:
     int m_iUnrotatedCornerY[8];
     int m_iUnrotatedCornerZ[8];
 
+    /* Dst from middle to corner */
+    double dstFromMiddle2Corner;
+
     /* Image Center Point */
     int m_iCenterPointX;
     int m_iCenterPointY;
