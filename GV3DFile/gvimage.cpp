@@ -52,6 +52,7 @@ int GVImage::openFile(const char* p_cFilename)
 
 int GVImage::readImageFile(fstream *file)
 {
+    /* Delete previous image data */
     if(m_bImageStored == true){
         deleteCurrentImage();
     }

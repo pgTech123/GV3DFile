@@ -51,29 +51,51 @@ void GVTransform::setUnrotatedCornersCorners(int iCenterPointX, int iCenterPoint
 
 
     dstFromMiddle2Corner = sqrt((iSideLenght/2)*(iSideLenght/2)*3);
+    dstFromMiddle2CornerV2 = sqrt((iSideLenght/2)*(iSideLenght/2)*2);
+}
+
+void GVTransform::setDistanceFromCamera(double dDstFromCam)
+{
+    m_dDstFromCam = dDstFromCam;
 }
 
 void GVTransform::computeRotation(double *dScreenRotatedCornerX, double *dScreenRotatedCornerY, double *dRotatedCornerZ)
 {
+    double test[8];
+    /*TODO: Faire la trigo comme du monde et corriger les erreurs */
+    test[0] = dstFromMiddle2Corner * cos(m_dPhi+(1*PI/4));
+    test[1] = dstFromMiddle2Corner * cos(m_dPhi+(1*PI/4));
+    test[2] = dstFromMiddle2Corner * cos(m_dPhi+(3*PI/4));
+    test[3] = dstFromMiddle2Corner * cos(m_dPhi+(3*PI/4));
+    test[4] = dstFromMiddle2Corner * cos(m_dPhi+(7*PI/4));
+    test[5] = dstFromMiddle2Corner * cos(m_dPhi+(7*PI/4));
+    test[6] = dstFromMiddle2Corner * cos(m_dPhi+(5*PI/4));
+    test[7] = dstFromMiddle2Corner * cos(m_dPhi+(5*PI/4));
+    /* Rotation Theta */
+    dScreenRotatedCornerX[0] = ( cos(m_dTheta+1*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
+    dScreenRotatedCornerX[1] = ( cos(m_dTheta+3*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
+    dScreenRotatedCornerX[2] = ( cos(m_dTheta+5*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
+    dScreenRotatedCornerX[3] = ( cos(m_dTheta+7*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
+    dScreenRotatedCornerX[4] = ( cos(m_dTheta+1*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
+    dScreenRotatedCornerX[5] = ( cos(m_dTheta+3*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
+    dScreenRotatedCornerX[6] = ( cos(m_dTheta+5*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
+    dScreenRotatedCornerX[7] = ( cos(m_dTheta+7*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
+
+    /* Rotation Phi */
+    dScreenRotatedCornerY[0] = dstFromMiddle2CornerV2*sin(m_dPhi+(1*PI/4)) + m_iCenterPointY;
+    dScreenRotatedCornerY[1] = dstFromMiddle2CornerV2*sin(m_dPhi+(1*PI/4)) + m_iCenterPointY;
+    dScreenRotatedCornerY[2] = dstFromMiddle2CornerV2*sin(m_dPhi+(3*PI/4)) + m_iCenterPointY;
+    dScreenRotatedCornerY[3] = dstFromMiddle2CornerV2*sin(m_dPhi+(3*PI/4)) + m_iCenterPointY;
+    dScreenRotatedCornerY[4] = dstFromMiddle2CornerV2*sin(m_dPhi+(7*PI/4)) + m_iCenterPointY;
+    dScreenRotatedCornerY[5] = dstFromMiddle2CornerV2*sin(m_dPhi+(7*PI/4)) + m_iCenterPointY;
+    dScreenRotatedCornerY[6] = dstFromMiddle2CornerV2*sin(m_dPhi+(5*PI/4)) + m_iCenterPointY;
+    dScreenRotatedCornerY[7] = dstFromMiddle2CornerV2*sin(m_dPhi+(5*PI/4)) + m_iCenterPointY;
+
+    /*TODO CORRECTLY*/
     for(int i = 0; i < 8; i++)
     {
-        dScreenRotatedCornerX[i] = (dstFromMiddle2Corner * cos(m_dTheta+(i*PI/2))) +
-                                   m_iCenterPointX;
-
-        if(i%2 == 0){
-            dScreenRotatedCornerY[i] = (m_iUnrotatedCornerY[i]*cos(m_dPhi+(i*PI/2))) +
-                                        m_iCenterPointY;
-        }
-        else{
-            dScreenRotatedCornerY[i] = (m_iUnrotatedCornerY[i]*cos(m_dPhi+((i-1)*PI/2))) +
-                                        m_iCenterPointY;
-        }
-
-        /*******************************************************
-         * "-1" to respect axis (-1 = far, 1 = close) so must be
-         * inverted for sorting
-         ******************************************************/
-        dRotatedCornerZ[i] = -m_iUnrotatedCornerZ[i]*m_dSinTheta*m_dSinPhi;
+        /* Distance from viewer */
+        dRotatedCornerZ[i] = -dstFromMiddle2Corner*sin(m_dTheta+(i*PI/2))*sin(m_dPhi+((i-1)*PI/2));
     }
 }
 

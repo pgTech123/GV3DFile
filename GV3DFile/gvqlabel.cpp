@@ -16,8 +16,8 @@ GVQLabel::GVQLabel()
     initializeRenderingWidget("./image_test.i3c");
 
     /* TO REMOVE */
-    angleTheta = PI/2;
-    anglePhi = PI/2;
+    angleTheta = 0;
+    anglePhi = 0;
 }
 
 GVQLabel::GVQLabel(const char* p_cPath)
@@ -52,7 +52,7 @@ void GVQLabel::initializeRenderingWidget(const char* p_cPath)
 void GVQLabel::refreshScreen()
 {
     angleTheta+= 0.1;
-    //anglePhi+= 0.1;
+    anglePhi+= 0.1;
 
     /* Image Preparation and Rendering */
     GV->setRotation(angleTheta, anglePhi);
