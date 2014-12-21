@@ -36,7 +36,7 @@
 #define APPLICATION_NAME    "GV3DFile"
 
 /* 3D Image Path */
-#define FILE_PATH           "./../TestSquare3D3Levels.i3c"
+#define FILE_PATH           "./../TestCube3D3Levels.i3c"
 
 
 int main(int argc, char *argv[])
@@ -46,7 +46,6 @@ int main(int argc, char *argv[])
     /* FUNCTION TEST SECTION */
         //runTestSort();
         //runTestLookupTable();
-        runTestMultiply3x3Matrix();
     /* END TESTS */
 
     GVQLabel *window = new GVQLabel(FILE_PATH);

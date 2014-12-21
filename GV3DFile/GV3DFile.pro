@@ -8,8 +8,7 @@ SOURCES += \
     gvindexcube.cpp \
     gvqlabel.cpp \
     gvtests.cpp \
-    gvtransform.cpp \
-    gvmatrix.cpp
+    gvtransform.cpp
 
 HEADERS += \
     gvbinaryfunctions.h \
@@ -17,5 +16,4 @@ HEADERS += \
     gvindexcube.h \
     gvqlabel.h \
     gvtests.h \
-    gvtransform.h \
-    gvmatrix.h
+    gvtransform.h
