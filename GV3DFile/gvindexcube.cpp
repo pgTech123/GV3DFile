@@ -18,10 +18,8 @@ GVIndexCube::GVIndexCube()
 }
 
 GVIndexCube::GVIndexCube(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData,
-                         bool* p_bPixelFilled, GVIndexCube** p_GVImageArray, gvLookUpTable*& lookupTable)
+                         bool* p_bPixelFilled, GVIndexCube** p_GVImageArray)
 {
-    m_pLookupTable = lookupTable;
-
     /* Preset everithing to 0 then try to charge specified data */
     initializeCube();    //TODO: Catch possible error
     setImageProperty(p_iImageWidth, p_iImageHeight, p_ucImageData, p_bPixelFilled);

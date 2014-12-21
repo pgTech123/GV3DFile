@@ -7,7 +7,6 @@ SOURCES += \
     gvimage.cpp \
     gvindexcube.cpp \
     gvqlabel.cpp \
-    gvlookuptable.cpp \
     gvtests.cpp \
     gvtransform.cpp \
     gvmatrix.cpp
@@ -17,7 +16,6 @@ HEADERS += \
     gvimage.h \
     gvindexcube.h \
     gvqlabel.h \
-    gvlookuptable.h \
     gvtests.h \
     gvtransform.h \
     gvmatrix.h

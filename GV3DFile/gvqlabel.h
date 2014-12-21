@@ -16,7 +16,6 @@
 #include <QImage>
 #include <QTimer>
 #include "gvimage.h"
-#include "gvlookuptable.h"
 
 /*************************************************************************
  * GVQLabel Class:

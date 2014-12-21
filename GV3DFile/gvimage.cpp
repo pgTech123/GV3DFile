@@ -31,7 +31,6 @@ void GVImage::initializeImage()
     m_bImageStored =false;
     m_dTheta = 0;
     m_dPhi = 0;
-    m_pLookupTable = new gvLookUpTable();
 }
 
 int GVImage::openFile(const char* p_cFilename)
@@ -178,8 +177,7 @@ int GVImage::readPixelCubes(fstream *file)
                                                                   &*m_p_iImageHeight,
                                                                   &*m_p_ucImageData,
                                                                   &*m_p_bPixelFilled,
-                                                                  &m_p_GVImageArray[0],
-                                                                  m_pLookupTable);
+                                                                  &m_p_GVImageArray[0]);
         iError = readMap(file, &ucMap, &iNumOfPixels);
         if(iError != NO_ERRORS){
             return iError;
@@ -238,8 +236,7 @@ int GVImage::readIndexCubes(fstream *file)
                                                                           &*m_p_iImageHeight,
                                                                           &*m_p_ucImageData,
                                                                           &*m_p_bPixelFilled,
-                                                                          &m_p_GVImageArray[0],
-                                                                          m_pLookupTable);
+                                                                          &m_p_GVImageArray[0]);
 
                 m_p_GVImageArray[iCubeBeingWritten]->addReferenceCube(ucMap,
                                                                       &m_p_GVImageArray[iAddressCubesCursorOffset]);

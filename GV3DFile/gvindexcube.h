@@ -14,7 +14,6 @@
 #include <iostream>
 #include <math.h>
 #include "gvbinaryfunctions.h"
-#include "gvlookuptable.h"
 
 using namespace std;
 
@@ -34,8 +33,7 @@ public:
                 int* p_iImageHeight,
                 unsigned char* p_ucImageData,
                 bool* p_bPixelFilled,
-                GVIndexCube** p_GVImageArray,
-                gvLookUpTable*& lookupTable);
+                GVIndexCube** p_GVImageArray);
 
     /* Setters */
     void setGVIndexStorageReference(GVIndexCube** p_GVImageArray);
@@ -100,7 +98,6 @@ protected:
     unsigned char* m_p_ucImageData;
     bool* m_p_bPixelFilled;
     GVIndexCube** m_p_GVImageArray;
-    gvLookUpTable* m_pLookupTable;  //Not used yet
 
 private:
     /* Cube info */
