@@ -34,9 +34,9 @@ public:
                 unsigned char* p_ucImageData,
                 bool* p_bPixelFilled,
                 GVIndexCube** p_GVImageArray);
+    ~GVIndexCube();
 
     /* Setters */
-    void setGVIndexStorageReference(GVIndexCube** p_GVImageArray);
     bool setImageProperty(int* p_iImageWidth,
                           int* p_iImageHeight,
                           unsigned char* p_ucImageData,
@@ -97,7 +97,6 @@ protected:
     int* m_p_iImageHeight;
     unsigned char* m_p_ucImageData;
     bool* m_p_bPixelFilled;
-    GVIndexCube** m_p_GVImageArray;
 
 private:
     /* Cube info */

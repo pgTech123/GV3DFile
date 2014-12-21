@@ -270,7 +270,15 @@ int GVImage::readMap(fstream *file, unsigned char* ucMap, int* iNumOfPix)
 
 void GVImage::deleteCurrentImage()
 {
-    //TODO:
+    delete m_p_iImageWidth;
+    delete m_p_iImageHeight;
+    delete[] m_p_ucImageData;
+    delete[] m_p_bPixelFilled;
+    for(int i = 0; i< m_iNumberOfCubes ; i++)
+    {
+        delete[] m_p_GVImageArray[i];
+    }
+    delete[] m_p_GVImageArray;
 }
 
 int GVImage::getWidth()

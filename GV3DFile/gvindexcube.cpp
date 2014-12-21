@@ -23,7 +23,13 @@ GVIndexCube::GVIndexCube(int* p_iImageWidth, int* p_iImageHeight, unsigned char*
     /* Preset everithing to 0 then try to charge specified data */
     initializeCube();    //TODO: Catch possible error
     setImageProperty(p_iImageWidth, p_iImageHeight, p_ucImageData, p_bPixelFilled);
-    setGVIndexStorageReference(p_GVImageArray);
+}
+GVIndexCube::~GVIndexCube()
+{
+    delete[] m_ucBlue;
+    delete[] m_ucGreen;
+    delete[] m_ucRed;
+    delete[] m_p_GVIndexCubeArray;
 }
 
 void GVIndexCube::initializeCube()
@@ -50,11 +56,6 @@ bool GVIndexCube::setImageProperty(int* p_iImageWidth, int* p_iImageHeight,
     }
 }
 
-void GVIndexCube::setGVIndexStorageReference(GVIndexCube** p_GVImageArray)
-{
-    m_p_GVImageArray = p_GVImageArray;
-}
-
 int GVIndexCube::getHierarchyLevel()
 {
     return m_iHierarchyLevel;
@@ -67,7 +68,6 @@ void GVIndexCube::addPixelsCube(unsigned char ucMap, int* ucRed, int* ucGreen, i
     int i_Counter = 0;
 
     /* Create storage according to the map */
-   // int iPixelsNotEmpty = numberHighBits(m_ucMap);
     m_ucRed = new unsigned char[8];
     m_ucGreen = new unsigned char[8];
     m_ucBlue = new unsigned char[8];
@@ -91,7 +91,6 @@ void GVIndexCube::addReferenceCube(unsigned char ucMap, GVIndexCube** p_ChildCub
 
     /* Create storage according to the map */
     m_ucMap = ucMap;
-    int iReferencesNotEmpty = numberHighBits(m_ucMap);
     m_p_GVIndexCubeArray = new GVIndexCube*[8];
 
     /* Set the reference for each specified child cube */
@@ -120,7 +119,6 @@ void GVIndexCube::ApplyRotation_and_Render( double iArrPosXRotation[8], //relati
                     dCenterPointY);
     }
     else{
-        // !!!Problem in this function: inverted...
         renderPixel(iArrPosXRotation,
                     iArrPosYRotation,
                     ucSortedByDstFromScreen,
@@ -279,7 +277,7 @@ void GVIndexCube::computeChildCorners(double* dArrPosXRotation,
         m_dChildComputedCornersX[7] = dCenterPointX;
         m_dChildComputedCornersY[7] = dCenterPointY;
     }
-    else if(ucMapIndex == 4){
+    else if(ucMapIndex == 2){
         m_dChildComputedCornersX[0] = dMidFaceXArr[0];
         m_dChildComputedCornersY[0] = dMidFaceYArr[0];
         m_dChildComputedCornersX[1] = dMidArrX[1];
@@ -297,7 +295,7 @@ void GVIndexCube::computeChildCorners(double* dArrPosXRotation,
         m_dChildComputedCornersX[7] = dMidFaceXArr[3];
         m_dChildComputedCornersY[7] = dMidFaceYArr[3];
     }
-    else if(ucMapIndex == 5){
+    else if(ucMapIndex == 3){
         m_dChildComputedCornersX[0] = dMidArrX[3];
         m_dChildComputedCornersY[0] = dMidArrY[3];
         m_dChildComputedCornersX[1] = dMidFaceXArr[0];
@@ -315,7 +313,7 @@ void GVIndexCube::computeChildCorners(double* dArrPosXRotation,
         m_dChildComputedCornersX[7] = dMidArrX[7];
         m_dChildComputedCornersY[7] = dMidArrY[7];
     }
-    else if(ucMapIndex == 2){
+    else if(ucMapIndex == 4){
         m_dChildComputedCornersX[0] = dMidArrX[4];
         m_dChildComputedCornersY[0] = dMidArrY[4];
         m_dChildComputedCornersX[1] = dMidFaceXArr[1];
@@ -333,7 +331,7 @@ void GVIndexCube::computeChildCorners(double* dArrPosXRotation,
         m_dChildComputedCornersX[7] = dMidArrX[11];
         m_dChildComputedCornersY[7] = dMidArrY[11];
     }
-    else if(ucMapIndex == 3){
+    else if(ucMapIndex == 5){
         m_dChildComputedCornersX[0] = dMidFaceXArr[1];
         m_dChildComputedCornersY[0] = dMidFaceYArr[1];
         m_dChildComputedCornersX[1] = dMidArrX[5];
@@ -408,9 +406,17 @@ void GVIndexCube::findCenterPoint()
 
 bool GVIndexCube::isChildFullyHidden()
 {
-    /*Scan to see if any pixel in the region defined by m_dChildComputedCornersX
+    /* Scan to see if any pixel in the region defined by m_dChildComputedCornersX
      * and m_dChildComputedCornersY is not written*/
-    //TODO
+    /*
+    int minValueX =
+    int minValueY =
+    int maxValueX =
+    int maxValueY =
+    */
+
+    //TODO: Check in square if everithing is defined
+
     return false;
 }
 

@@ -53,6 +53,8 @@ void GVTransform::setUnrotatedCornersCorners(int iCenterPointX, int iCenterPoint
 void GVTransform::computeRotation(double *dScreenRotatedCornerX, double *dScreenRotatedCornerY, double *dRotatedCornerZ)
 {
     generateRotationMatrix();
+
+    /* Compute Rotated Points */
     for(int i = 0; i < 8; i++)
     {
         dScreenRotatedCornerX[i] = m_dRotationMatrix[0][0]*m_iUnrotatedCornerX[i] +
@@ -71,6 +73,7 @@ void GVTransform::computeRotation(double *dScreenRotatedCornerX, double *dScreen
 
 void GVTransform::generateRotationMatrix()
 {
+    /* Precomputation */
     double cosAngleX = cos(m_dAngleX);
     double sinAngleX = sin(m_dAngleX);
     double cosAngleY = cos(m_dAngleY);
@@ -81,6 +84,7 @@ void GVTransform::generateRotationMatrix()
     double cosXSinY = cosAngleX * sinAngleY;
     double sinXSinY = sinAngleX * sinAngleY;
 
+    /* Matrix Assignation */
     m_dRotationMatrix[0][0] = cosAngleY * cosAngleZ;
     m_dRotationMatrix[0][1] = -cosAngleY * sinAngleZ;
     m_dRotationMatrix[0][2] = sinAngleY;

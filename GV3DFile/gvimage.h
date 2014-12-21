@@ -81,6 +81,7 @@ private:
     double m_dTheta;
     double m_dPhi;
     GVTransform transform;
+    GVIndexCube** m_p_GVImageArray;
 
 
     int m_iSideLenght;

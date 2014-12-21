@@ -28,27 +28,17 @@
 
 #include <QApplication>
 #include <QIcon>
-#include "gvqlabel.h"
-#include "gvtests.h"
+#include "mainwindow.h"
 
 /* Program Parameters */
 #define ICON_PATH           "./../GVisionLogo.ico"
 #define APPLICATION_NAME    "GV3DFile"
 
-/* 3D Image Path */
-#define FILE_PATH           "./../TestCube3D3Levels.i3c"
-
-
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    /* FUNCTION TEST SECTION */
-        //runTestSort();
-        //runTestLookupTable();
-    /* END TESTS */
-
-    GVQLabel *window = new GVQLabel(FILE_PATH);
+    MainWindow *window = new MainWindow();
     QIcon *icon = new QIcon(ICON_PATH);
 
     /* Set Window Parameters */

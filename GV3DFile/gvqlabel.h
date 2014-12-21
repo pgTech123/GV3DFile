@@ -15,6 +15,7 @@
 #include <QPixmap>
 #include <QImage>
 #include <QTimer>
+#include <QResizeEvent>
 #include "gvimage.h"
 
 /*************************************************************************
@@ -24,6 +25,8 @@
  * image rendered.
  *************************************************************************/
 
+#define DEFAULT_IMAGE_PATH  "./default.i3c"
+
 class GVQLabel : public QLabel
 {
     Q_OBJECT
@@ -31,9 +34,19 @@ class GVQLabel : public QLabel
 public:
     explicit GVQLabel();
     GVQLabel(const char* p_cPath);
+    ~GVQLabel();
+
+public slots:
+    void setAngles(double angleX, double angleY);
+    void setAngleX(double angleX);
+    void setAngleY(double angleY);
+
+protected:
+    void resizeEvent(QResizeEvent *);
 
 private:
     void initializeRenderingWidget(const char* p_cPath);
+    void presetWidgetSizeAndAngles();
 
 private slots:
     void refreshScreen();
@@ -54,6 +67,10 @@ private:
     /* TEST ANGLE */
     double angleTheta;
     double anglePhi;
+
+    /* Auto-Resize Widget */
+    int m_iWidgetWidth;
+    int m_iWidgetHeight;
 };
 
 #endif // GVQLABEL_H
