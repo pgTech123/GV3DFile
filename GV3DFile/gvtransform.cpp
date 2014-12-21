@@ -5,11 +5,11 @@ GVTransform::GVTransform()
     setAngles(0,0);
 }
 
-void GVTransform::setAngles(double dTheta, double dPhi)
+void GVTransform::setAngles(double dAngleX, double dAngleY, double dAngleZ)
 {
-    m_dTheta = dTheta;
-    m_dPhi = dPhi;
-    computeSinAndCos();
+    m_dAngleX = dAngleX;
+    m_dAngleY = dAngleY;
+    m_dAngleZ = dAngleZ;
 }
 
 void GVTransform::setUnrotatedCornersCorners(int iCenterPointX, int iCenterPointY, int iSideLenght)
@@ -48,91 +48,57 @@ void GVTransform::setUnrotatedCornersCorners(int iCenterPointX, int iCenterPoint
     m_iUnrotatedCornerX[7] = -iSideLenght/2;
     m_iUnrotatedCornerY[7] = -iSideLenght/2;
     m_iUnrotatedCornerZ[7] = -1*(iSideLenght/2);
-
-
-    dstFromMiddle2Corner = sqrt((iSideLenght/2)*(iSideLenght/2)*3);
-    dstFromMiddle2CornerV2 = sqrt((iSideLenght/2)*(iSideLenght/2)*2);
-}
-
-void GVTransform::setDistanceFromCamera(double dDstFromCam)
-{
-    m_dDstFromCam = dDstFromCam;
 }
 
 void GVTransform::computeRotation(double *dScreenRotatedCornerX, double *dScreenRotatedCornerY, double *dRotatedCornerZ)
 {
-    double test[8];
-    /*TODO: Faire la trigo comme du monde et corriger les erreurs */
-    test[0] = dstFromMiddle2Corner * cos(m_dPhi+(1*PI/4));
-    test[1] = dstFromMiddle2Corner * cos(m_dPhi+(1*PI/4));
-    test[2] = dstFromMiddle2Corner * cos(m_dPhi+(3*PI/4));
-    test[3] = dstFromMiddle2Corner * cos(m_dPhi+(3*PI/4));
-    test[4] = dstFromMiddle2Corner * cos(m_dPhi+(7*PI/4));
-    test[5] = dstFromMiddle2Corner * cos(m_dPhi+(7*PI/4));
-    test[6] = dstFromMiddle2Corner * cos(m_dPhi+(5*PI/4));
-    test[7] = dstFromMiddle2Corner * cos(m_dPhi+(5*PI/4));
-    /* Rotation Theta */
-    dScreenRotatedCornerX[0] = ( cos(m_dTheta+1*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
-    dScreenRotatedCornerX[1] = ( cos(m_dTheta+3*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
-    dScreenRotatedCornerX[2] = ( cos(m_dTheta+5*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
-    dScreenRotatedCornerX[3] = ( cos(m_dTheta+7*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
-    dScreenRotatedCornerX[4] = ( cos(m_dTheta+1*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
-    dScreenRotatedCornerX[5] = ( cos(m_dTheta+3*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
-    dScreenRotatedCornerX[6] = ( cos(m_dTheta+5*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
-    dScreenRotatedCornerX[7] = ( cos(m_dTheta+7*PI/4) * dstFromMiddle2CornerV2) + m_iCenterPointX;
-
-    /* Rotation Phi */
-    dScreenRotatedCornerY[0] = dstFromMiddle2CornerV2*sin(m_dPhi+(1*PI/4)) + m_iCenterPointY;
-    dScreenRotatedCornerY[1] = dstFromMiddle2CornerV2*sin(m_dPhi+(1*PI/4)) + m_iCenterPointY;
-    dScreenRotatedCornerY[2] = dstFromMiddle2CornerV2*sin(m_dPhi+(3*PI/4)) + m_iCenterPointY;
-    dScreenRotatedCornerY[3] = dstFromMiddle2CornerV2*sin(m_dPhi+(3*PI/4)) + m_iCenterPointY;
-    dScreenRotatedCornerY[4] = dstFromMiddle2CornerV2*sin(m_dPhi+(7*PI/4)) + m_iCenterPointY;
-    dScreenRotatedCornerY[5] = dstFromMiddle2CornerV2*sin(m_dPhi+(7*PI/4)) + m_iCenterPointY;
-    dScreenRotatedCornerY[6] = dstFromMiddle2CornerV2*sin(m_dPhi+(5*PI/4)) + m_iCenterPointY;
-    dScreenRotatedCornerY[7] = dstFromMiddle2CornerV2*sin(m_dPhi+(5*PI/4)) + m_iCenterPointY;
-
-    /*TODO CORRECTLY*/
+    generateRotationMatrix();
     for(int i = 0; i < 8; i++)
     {
-        /* Distance from viewer */
-        dRotatedCornerZ[i] = -dstFromMiddle2Corner*sin(m_dTheta+(i*PI/2))*sin(m_dPhi+((i-1)*PI/2));
+        dScreenRotatedCornerX[i] = m_dRotationMatrix[0][0]*m_iUnrotatedCornerX[i] +
+                                   m_dRotationMatrix[0][1]*m_iUnrotatedCornerY[i] +
+                                   m_dRotationMatrix[0][2]*m_iUnrotatedCornerZ[i] + m_iCenterPointX;
+
+        dScreenRotatedCornerY[i] = m_dRotationMatrix[1][0]*m_iUnrotatedCornerX[i] +
+                                   m_dRotationMatrix[1][1]*m_iUnrotatedCornerY[i] +
+                                   m_dRotationMatrix[1][2]*m_iUnrotatedCornerZ[i] + m_iCenterPointY;
+
+        dRotatedCornerZ[i] = m_dRotationMatrix[2][0]*m_iUnrotatedCornerX[i] +
+                                   m_dRotationMatrix[2][1]*m_iUnrotatedCornerY[i] +
+                                   m_dRotationMatrix[2][2]*m_iUnrotatedCornerZ[i];
     }
 }
 
-void GVTransform::computeSinAndCos()
+void GVTransform::generateRotationMatrix()
 {
-    /*Precompute value of sin and cos*/
-    m_dCosTheta = cos(m_dTheta);
-    m_dSinTheta = sin(m_dTheta+PI/2);
-    m_dCosPhi = cos(m_dPhi);
-    m_dSinPhi = sin(m_dPhi+PI/2);
+    double cosAngleX = cos(m_dAngleX);
+    double sinAngleX = sin(m_dAngleX);
+    double cosAngleY = cos(m_dAngleY);
+    double sinAngleY = sin(m_dAngleY);
+    double cosAngleZ = cos(m_dAngleZ);
+    double sinAngleZ = sin(m_dAngleZ);
+
+    double cosXSinY = cosAngleX * sinAngleY;
+    double sinXSinY = sinAngleX * sinAngleY;
+
+    m_dRotationMatrix[0][0] = cosAngleY * cosAngleZ;
+    m_dRotationMatrix[0][1] = -cosAngleY * sinAngleZ;
+    m_dRotationMatrix[0][2] = sinAngleY;
+    m_dRotationMatrix[0][3] = 0;
+
+    m_dRotationMatrix[1][0] = sinXSinY * cosAngleZ + cosAngleX*sinAngleZ;
+    m_dRotationMatrix[1][1] = - sinXSinY * sinAngleZ + cosAngleX * cosAngleZ;
+    m_dRotationMatrix[1][2] = - sinAngleX * cosAngleY;
+    m_dRotationMatrix[1][3] = 0;
+
+    m_dRotationMatrix[2][0] = - cosXSinY * cosAngleZ + sinAngleX * sinAngleZ;
+    m_dRotationMatrix[2][1] = cosXSinY * sinAngleZ + sinAngleX * cosAngleZ;
+    m_dRotationMatrix[2][2] = cosAngleX * cosAngleY;
+    m_dRotationMatrix[2][3] = 0;
+
+    m_dRotationMatrix[3][0] = 0;
+    m_dRotationMatrix[3][1] = 0;
+    m_dRotationMatrix[3][2] = 0;
+    m_dRotationMatrix[3][3] = 1;
+
 }
-
-/*
-double GVTransform::computeRotationX(double dRTetha, double dRPhi, double* dScreenRotatedCornerX)
-{
-
-    return iX;//iX*cos(dRPhi) + iZ*sin(dRPhi);
-}
-
-double GVTransform::computeRotationY(double dRTetha, double dRPhi, double* dScreenRotatedCornerX)
-{
-
-    return iY;//iX *sin(dRTetha)*sin(dRPhi) + iY*cos(dRTetha) - iZ*sin(dRTetha)*cos(dRPhi);
-}
-
-double GVTransform::computeRotationZ(double dRTetha, double dRPhi, double* dScreenRotatedCornerX)
-{
-    return -1;//(-iX)*cos(dRTetha)*sin(dRPhi) - iY*sin(dRTetha) + iZ*cos(dRTetha)*cos(dRPhi);//-1 to respec axis convension
-}
-
-double GVTransform::computePosXOnScreen(double dRTetha, double dRPhi, double* dScreenRotatedCornerX)
-{
-    return computeRotationX(iX, iZ, dRPhi)/computeRotationZ(iX, iY, iZ, dRTetha, dRPhi);
-}
-
-double GVTransform::computePosYOnScreen(double dRTetha, double dRPhi, double* dScreenRotatedCornerX)
-{
-    return computeRotationY(iX, iY, iZ, dRTetha, dRPhi)/computeRotationZ(iX, iY, iZ, dRTetha, dRPhi);
-}
-*/

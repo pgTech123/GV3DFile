@@ -6,6 +6,8 @@
 
 #include "gvbinaryfunctions.h"
 #include "gvlookuptable.h"
+#include "gvtransform.h"
+#include "gvmatrix.h"
 
 using namespace std;
 
@@ -13,6 +15,9 @@ using namespace std;
 void runTestSort();
 void runTestLookupTable();
 void runTestLookupTable(gvLookUpTable* tbl);
+
+/* Return : True = Pass; False = Fail */
+bool runTestMultiply3x3Matrix();
 
 
 #endif // GVTESTS_H

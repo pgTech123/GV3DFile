@@ -20,40 +20,31 @@ public:
 
     /* Setters */
     void setUnrotatedCornersCorners(int iCenterPointX, int iCenterPointY, int iSideLenght);
-    void setAngles(double dTheta, double dPhi);
-    void setDistanceFromCamera(double dDstFromCam);
+    void setAngles(double dAngleX, double dAngleY, double dAngleZ = 0);
 
     /* Computing */
     void computeRotation(double* dScreenRotatedCornerX, double* dScreenRotatedCornerY, double* dRotatedCornerZ);
 
-private:
-    void computeSinAndCos();
+    /* Matrix Op */
+    void generateRotationMatrix();
 
 private:
     /* Angles */
-    double m_dTheta;
-    double m_dPhi;
-
-    double m_dDstFromCam;
-
-    /* Trigo */
-    double m_dCosTheta;
-    double m_dCosPhi;
-    double m_dSinTheta;
-    double m_dSinPhi;
+    double m_dAngleX;
+    double m_dAngleY;
+    double m_dAngleZ;
 
     /* Unrotated Corners */
     int m_iUnrotatedCornerX[8];
     int m_iUnrotatedCornerY[8];
     int m_iUnrotatedCornerZ[8];
 
-    /* Dst from middle to corner */
-    double dstFromMiddle2Corner;
-    double dstFromMiddle2CornerV2;
-
     /* Image Center Point */
     int m_iCenterPointX;
     int m_iCenterPointY;
+
+    /* Rotation Matrix */
+    double m_dRotationMatrix[4][4];
 };
 
 #endif // GVTRANSFORM_H

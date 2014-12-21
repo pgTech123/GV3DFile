@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
     /* FUNCTION TEST SECTION */
         //runTestSort();
         //runTestLookupTable();
+        runTestMultiply3x3Matrix();
     /* END TESTS */
 
     GVQLabel *window = new GVQLabel(FILE_PATH);
