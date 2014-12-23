@@ -11,7 +11,7 @@
 #ifndef GVIMAGE_H
 #define GVIMAGE_H
 
-#include <iostream>
+//#include <iostream>
 #include <stdio.h>
 #include <fstream>
 #include "gvindexcube.h"
@@ -27,7 +27,7 @@
 #define SIZE_NOT_BASE_2         3
 #define FILE_CORRUPTED          4
 
-using namespace std;
+//using namespace std;
 
 /*************************************************************************
  * GVImage Class:

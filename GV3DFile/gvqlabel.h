@@ -36,6 +36,8 @@ public:
     GVQLabel(const char* p_cPath);
     ~GVQLabel();
 
+    void setPathToImage(const char* p_cPath);
+
 public slots:
     void setAngles(double angleX, double angleY);
     void setAngleX(double angleX);

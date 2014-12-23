@@ -64,3 +64,20 @@ void MainWindow::incrementRotation()
     m_dAngleY += (double)ui->verticalSlider->value()/200;
     renderingWidget->setAngleY(m_dAngleY);
 }
+
+void MainWindow::on_actionOpen_triggered()
+{
+    QString pathToImage = QFileDialog::getOpenFileName(this, "Load 3D Image",
+                                              QString(), "3D Image File(*.i3c)");
+    renderingWidget->setPathToImage(pathToImage.toStdString().c_str());
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+    qApp->exit();
+}
+
+void MainWindow::on_actionAbout_I3C_Visualizer_triggered()
+{
+    aboutUsWindow.show();
+}

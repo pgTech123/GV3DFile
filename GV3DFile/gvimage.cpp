@@ -65,7 +65,7 @@ int GVImage::readImageFile(fstream *file)
     if(iError != NO_ERRORS){
         return iError;
     }
-    cout << "Side Lenght: " << m_iSideLenght << endl;     /* Debug */
+    //cout << "Side Lenght: " << m_iSideLenght << endl;     /* Debug */
 
     /* Preparing to Read Image*/
     setImageProperties();
@@ -120,7 +120,7 @@ void GVImage::setNumberOfLevels()
     m_iNumberOfLevels = firstHighBit(m_iSideLenght);
 
     /* Debug */
-    cout << "Number of Levels: " << m_iNumberOfLevels << endl;
+    //cout << "Number of Levels: " << m_iNumberOfLevels << endl;
 
     m_iArrCubeAtLevel = new int[m_iNumberOfLevels];
 }
@@ -139,7 +139,7 @@ void GVImage::readNumOfMaps(fstream *file)
     }
 
     /* Debug */
-    cout << "Number of Cubes: " << m_iNumberOfCubes << endl;
+    //cout << "Number of Cubes: " << m_iNumberOfCubes << endl;
 
     /* Create Cube Pointer Array */
     m_p_GVImageArray = new GVIndexCube*[m_iNumberOfCubes];
@@ -262,8 +262,8 @@ int GVImage::readMap(fstream *file, unsigned char* ucMap, int* iNumOfPix)
     *ucMap = (unsigned char)iBufMap;
 
     /* Debug */
-    cout << "Number of Pixels in Cube: " << *iNumOfPix << endl;
-    cout << "Map: " << iBufMap << endl;
+    //cout << "Number of Pixels in Cube: " << *iNumOfPix << endl;
+    //cout << "Map: " << iBufMap << endl;
 
     return NO_ERRORS;
 }

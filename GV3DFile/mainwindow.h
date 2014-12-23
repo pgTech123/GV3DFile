@@ -2,14 +2,14 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QString>
 #include <QTimer>
 #include "gvqlabel.h"
-
-#include <iostream>
+#include "aboutus.h"
 
 /* Default 3D Image Path */
 #define DEFAULT_FILE_PATH           "./../TestCube3D3Levels.i3c"
-using namespace std;
 
 namespace Ui {
 class MainWindow;
@@ -30,10 +30,16 @@ private slots:
     void setAngleY(int value);
     void on_pushButtonStart_clicked();
 
+    void on_actionOpen_triggered();
+    void on_actionQuit_triggered();
+    void on_actionAbout_I3C_Visualizer_triggered();
+
 private:
     Ui::MainWindow *ui;
     GVQLabel *renderingWidget;
     QTimer *AutorotateTimer;
+
+    AboutUs aboutUsWindow;
 
     bool m_bRotationAuto;
 

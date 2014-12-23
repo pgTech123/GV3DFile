@@ -32,6 +32,28 @@ GVQLabel::~GVQLabel()
     }
 }
 
+void GVQLabel::setPathToImage(const char *p_cPath)
+{
+    /* Delete Previous Image */
+    if(GV != NULL){
+        cout << "Disconnect" << endl;
+        disconnect(refreshTimer,SIGNAL(timeout()),this,SLOT(refreshScreen()));
+        cout << "Delete" << endl;
+        //PROBLEM HERE
+        //delete GV;
+    }
+
+    /* Creation of the 3D image */
+    GV = new GVImage(p_cPath);
+
+    /* Retrieve Size and Pointer to Data from 3D Model */
+    m_intHeight = GV->getHeight();
+    m_intWidth = GV->getWidth();
+    m_ucharPixels = GV->getData();
+
+    connect(refreshTimer,SIGNAL(timeout()),this,SLOT(refreshScreen()));
+}
+
 void GVQLabel::presetWidgetSizeAndAngles()
 {
     /* x0.8 to be able to resize down */
@@ -46,27 +68,16 @@ void GVQLabel::presetWidgetSizeAndAngles()
 
 void GVQLabel::initializeRenderingWidget(const char* p_cPath)
 {
-    /* Delete Previous Image */
-    if(GV != NULL){
-        delete GV;
-    }
-
-    /* Creation of the 3D image */
-    GV = new GVImage(p_cPath);
-
     /* Refresh Image Callback */
     refreshTimer = new QTimer(this);
     refreshTimer->start(60);
     connect(refreshTimer,SIGNAL(timeout()),this,SLOT(refreshScreen()));
 
+    setPathToImage(p_cPath);
+
     /* Frame Initialization */
     frame = new QPixmap();
     frame->fill(Qt::black);
-
-    /* Retrieve Size and Pointer to Data from 3D Model */
-    m_intHeight = GV->getHeight();
-    m_intWidth = GV->getWidth();
-    m_ucharPixels = GV->getData();
 
     /* Display Initial Frame */
     QLabel::setPixmap(*frame);
@@ -97,6 +108,7 @@ void GVQLabel::setAngleY(double angleY)
 
 void GVQLabel::refreshScreen()
 {
+    cout << "Loop" << endl;
     /* Image Preparation and Rendering */
     GV->setRotation(angleTheta, anglePhi);
     GV->generateImage();
