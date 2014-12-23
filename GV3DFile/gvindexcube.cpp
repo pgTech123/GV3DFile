@@ -18,7 +18,7 @@ GVIndexCube::GVIndexCube()
 }
 
 GVIndexCube::GVIndexCube(int* p_iImageWidth, int* p_iImageHeight, unsigned char* p_ucImageData,
-                         bool* p_bPixelFilled, GVIndexCube** p_GVImageArray)
+                         bool* p_bPixelFilled)
 {
     /* Preset everithing to 0 then try to charge specified data */
     initializeCube();    //TODO: Catch possible error
@@ -26,10 +26,17 @@ GVIndexCube::GVIndexCube(int* p_iImageWidth, int* p_iImageHeight, unsigned char*
 }
 GVIndexCube::~GVIndexCube()
 {
-    delete[] m_ucBlue;
-    delete[] m_ucGreen;
-    delete[] m_ucRed;
-    delete[] m_p_GVIndexCubeArray;
+
+    if(m_iHierarchyLevel == 0){
+        delete[] m_ucBlue;
+        delete[] m_ucGreen;
+        delete[] m_ucRed;
+    }
+    else if(m_iHierarchyLevel > 0){
+        delete[] m_p_GVIndexCubeArray;
+    }
+
+
 }
 
 void GVIndexCube::initializeCube()
@@ -38,6 +45,7 @@ void GVIndexCube::initializeCube()
     m_p_iImageHeight = NULL;
     m_p_ucImageData = NULL;
     m_p_bPixelFilled = NULL;
+    m_iHierarchyLevel = -1;
 }
 
 bool GVIndexCube::setImageProperty(int* p_iImageWidth, int* p_iImageHeight,

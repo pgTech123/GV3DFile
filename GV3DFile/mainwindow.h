@@ -9,7 +9,7 @@
 #include "aboutus.h"
 
 /* Default 3D Image Path */
-#define DEFAULT_FILE_PATH           "./../TestCube3D3Levels.i3c"
+#define DEFAULT_FILE_PATH           "./../Default.i3c"
 
 namespace Ui {
 class MainWindow;

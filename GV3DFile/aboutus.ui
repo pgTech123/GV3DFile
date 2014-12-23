@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>277</height>
+    <width>380</width>
+    <height>220</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,29 +23,29 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>50</y>
-     <width>231</width>
+     <y>20</y>
+     <width>261</width>
      <height>61</height>
     </rect>
    </property>
    <property name="text">
-    <string>Program:      I3C File Visualizer
-Programmer:     Pascal Gendron
-Email:        pgendron@gmail.com</string>
+    <string>Program:            I3C File Visualizer
+Programmer:    Pascal Gendron
+Email:                  pgendron@gmail.com</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>140</y>
+     <y>110</y>
      <width>321</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
     <string>The purpose of GV I3C File Visualizer is to give
- an easy way to visualize 3D images, rotate 
+an easy way to visualize 3D images, rotate 
 them easilly, ...</string>
    </property>
    <property name="textFormat">
@@ -59,7 +59,7 @@ them easilly, ...</string>
    <property name="geometry">
     <rect>
      <x>280</x>
-     <y>50</y>
+     <y>20</y>
      <width>67</width>
      <height>61</height>
     </rect>
@@ -74,7 +74,37 @@ them easilly, ...</string>
     <bool>true</bool>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>170</y>
+     <width>99</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>AboutUs</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>309</x>
+     <y>173</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>189</x>
+     <y>98</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

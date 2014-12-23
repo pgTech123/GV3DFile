@@ -23,7 +23,9 @@ GVImage::GVImage(const char* p_cFilename)
 
 GVImage::~GVImage()
 {
-    deleteCurrentImage();
+    if(m_bImageStored == true){
+        deleteCurrentImage();
+    }
 }
 
 void GVImage::initializeImage()
@@ -141,6 +143,9 @@ void GVImage::readNumOfMaps(fstream *file)
     /* Debug */
     //cout << "Number of Cubes: " << m_iNumberOfCubes << endl;
 
+    /* One of the cube is 'this' so we remove 1 */
+    m_iNumberOfCubes--;
+
     /* Create Cube Pointer Array */
     m_p_GVImageArray = new GVIndexCube*[m_iNumberOfCubes];
 }
@@ -176,8 +181,7 @@ int GVImage::readPixelCubes(fstream *file)
         m_p_GVImageArray[iCubeBeingWritten] = new GVIndexCube(&*m_p_iImageWidth,
                                                                   &*m_p_iImageHeight,
                                                                   &*m_p_ucImageData,
-                                                                  &*m_p_bPixelFilled,
-                                                                  &m_p_GVImageArray[0]);
+                                                                  &*m_p_bPixelFilled);
         iError = readMap(file, &ucMap, &iNumOfPixels);
         if(iError != NO_ERRORS){
             return iError;
@@ -235,8 +239,7 @@ int GVImage::readIndexCubes(fstream *file)
                 m_p_GVImageArray[iCubeBeingWritten] = new GVIndexCube(&*m_p_iImageWidth,
                                                                           &*m_p_iImageHeight,
                                                                           &*m_p_ucImageData,
-                                                                          &*m_p_bPixelFilled,
-                                                                          &m_p_GVImageArray[0]);
+                                                                          &*m_p_bPixelFilled);
 
                 m_p_GVImageArray[iCubeBeingWritten]->addReferenceCube(ucMap,
                                                                       &m_p_GVImageArray[iAddressCubesCursorOffset]);
@@ -274,11 +277,13 @@ void GVImage::deleteCurrentImage()
     delete m_p_iImageHeight;
     delete[] m_p_ucImageData;
     delete[] m_p_bPixelFilled;
+
     for(int i = 0; i< m_iNumberOfCubes ; i++)
     {
-        delete[] m_p_GVImageArray[i];
+        delete m_p_GVImageArray[i];
     }
     delete[] m_p_GVImageArray;
+
 }
 
 int GVImage::getWidth()

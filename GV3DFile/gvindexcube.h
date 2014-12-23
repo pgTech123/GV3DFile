@@ -32,8 +32,7 @@ public:
     GVIndexCube(int* p_iImageWidth,
                 int* p_iImageHeight,
                 unsigned char* p_ucImageData,
-                bool* p_bPixelFilled,
-                GVIndexCube** p_GVImageArray);
+                bool* p_bPixelFilled);
     ~GVIndexCube();
 
     /* Setters */
