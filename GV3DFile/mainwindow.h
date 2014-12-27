@@ -23,6 +23,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    /* Events */
+    void closeEvent(QCloseEvent* event);
+
 private slots:
     void incrementRotation();
 

@@ -29,6 +29,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent*)
+{
+    qApp->exit();
+}
+
 void MainWindow::setAngleX(int value)
 {
     renderingWidget->setAngleX((double)value/30);
